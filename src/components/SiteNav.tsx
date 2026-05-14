@@ -4,8 +4,11 @@ const links = [
   { to: "/properties", label: "Properties" },
   { to: "/communities", label: "Communities" },
   { to: "/investment", label: "Intelligence" },
-  { to: "/concierge", label: "Concierge" },
+  { to: "/developers", label: "Developers" },
+  { to: "/services", label: "Services" },
+  { to: "/insights", label: "Insights" },
   { to: "/about", label: "About" },
+  { to: "/contact", label: "Contact" },
 ] as const;
 
 export function SiteNav() {
