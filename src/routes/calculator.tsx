@@ -53,10 +53,25 @@ function CalculatorPage() {
             <Result label="5-Year Property Value" value={fmtUsd(numbers.fiveYearValue)} />
             <Result label="5-Year Capital Gain" value={fmtUsd(numbers.fiveYearGain)} />
             <Result label="Indicative Annualized Return" value={`${numbers.irr.toFixed(2)}%`} accent />
-            <Link to="/concierge" className="block text-center mt-10 px-6 py-4 border border-accent/50 text-accent text-[11px] uppercase tracking-[0.3em] hover:bg-accent hover:text-accent-foreground transition-all duration-500">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-10">
+              <button
+                onClick={() => exportCsv({ price, grossYield, opex, appreciation, ...numbers })}
+                className="px-6 py-4 border border-border text-foreground text-[11px] uppercase tracking-[0.3em] hover:border-accent hover:text-accent transition-all"
+              >
+                Export CSV
+              </button>
+              <button
+                onClick={() => window.print()}
+                className="px-6 py-4 border border-border text-foreground text-[11px] uppercase tracking-[0.3em] hover:border-accent hover:text-accent transition-all"
+              >
+                Print / Save PDF
+              </button>
+            </div>
+            <Link to="/concierge" className="block text-center px-6 py-4 border border-accent/50 text-accent text-[11px] uppercase tracking-[0.3em] hover:bg-accent hover:text-accent-foreground transition-all duration-500">
               Underwrite a Specific Property
             </Link>
           </div>
+
         </div>
       </section>
     </PageShell>
@@ -66,6 +81,29 @@ function CalculatorPage() {
 function fmtUsd(n: number) {
   return new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 }).format(n);
 }
+
+function exportCsv(d: { price: number; grossYield: number; opex: number; appreciation: number; grossAnnual: number; netAnnual: number; fiveYearValue: number; fiveYearGain: number; irr: number }) {
+  const rows: [string, string | number][] = [
+    ["Acquisition Price (USD)", d.price],
+    ["Gross Rental Yield (%)", d.grossYield],
+    ["Operating Cost (% of gross)", d.opex],
+    ["Annual Appreciation (%)", d.appreciation],
+    ["Gross Annual Income (USD)", Math.round(d.grossAnnual)],
+    ["Net Annual Income (USD)", Math.round(d.netAnnual)],
+    ["5-Year Property Value (USD)", Math.round(d.fiveYearValue)],
+    ["5-Year Capital Gain (USD)", Math.round(d.fiveYearGain)],
+    ["Indicative Annualized Return (%)", d.irr.toFixed(2)],
+  ];
+  const csv = "Metric,Value\n" + rows.map((r) => `"${r[0]}","${r[1]}"`).join("\n");
+  const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `aureus-roi-${new Date().toISOString().slice(0, 10)}.csv`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
 
 function Slider({ label, value, min, max, step, format, onChange }: { label: string; value: number; min: number; max: number; step: number; format: (v: number) => string; onChange: (v: number) => void }) {
   return (
