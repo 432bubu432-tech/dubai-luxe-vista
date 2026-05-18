@@ -135,6 +135,18 @@ const properties = [
 ];
 
 function HomePage() {
+  const [leadSent, setLeadSent] = useState(false);
+
+  function onLeadSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    const fd = new FormData(e.currentTarget);
+    const email = String(fd.get("email") ?? "");
+    if (!email) return;
+    captureLead("Intelligence Report", { Email: email });
+    window.open(whatsappUrl(buildLeadMessage("Intelligence Report Request", { Email: email })), "_blank", "noopener,noreferrer");
+    setLeadSent(true);
+  }
+
   return (
     <PageShell>
       {/* HERO */}
