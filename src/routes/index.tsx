@@ -389,23 +389,50 @@ function HomePage() {
             Off-market opportunities, U.S. vs Dubai comparative analysis, tax structuring,
             and our proprietary outlook on the next growth corridors.
           </p>
-          <form className="flex flex-col sm:flex-row gap-0 border border-border max-w-xl mx-auto" onSubmit={(e) => e.preventDefault()}>
-            <label htmlFor="lead-email" className="sr-only">Email</label>
-            <input
-              id="lead-email"
-              type="email"
-              required
-              maxLength={255}
-              placeholder="Investment Email Address"
-              className="flex-1 bg-transparent px-6 py-4 text-xs uppercase tracking-[0.2em] text-foreground placeholder:text-muted-foreground focus:outline-none"
-            />
-            <button
-              type="submit"
-              className="bg-accent text-accent-foreground px-8 py-4 text-xs uppercase tracking-[0.2em] font-medium hover:brightness-110 transition-all"
-            >
-              Download Report
-            </button>
-          </form>
+          {leadSent ? (
+            <div className="border border-accent/40 max-w-xl mx-auto p-8">
+              <p className="font-mono text-[10px] text-accent uppercase tracking-[0.3em]">Confirmed</p>
+              <p className="text-base font-serif mt-3">The report is on its way. A senior advisor will follow up via WhatsApp with the secure download.</p>
+            </div>
+          ) : (
+            <form className="flex flex-col sm:flex-row gap-0 border border-border max-w-xl mx-auto" onSubmit={onLeadSubmit}>
+              <label htmlFor="lead-email" className="sr-only">Email</label>
+              <input
+                id="lead-email"
+                name="email"
+                type="email"
+                required
+                maxLength={255}
+                placeholder="Investment Email Address"
+                className="flex-1 bg-transparent px-6 py-4 text-xs uppercase tracking-[0.2em] text-foreground placeholder:text-muted-foreground focus:outline-none"
+              />
+              <button
+                type="submit"
+                className="bg-accent text-accent-foreground px-8 py-4 text-xs uppercase tracking-[0.2em] font-medium hover:brightness-110 transition-all"
+              >
+                Download Report
+              </button>
+            </form>
+          )}
+        </div>
+      </section>
+
+      {/* FAQ */}
+      <section className="py-28 px-6 md:px-10 border-t border-border">
+        <div className="max-w-4xl mx-auto">
+          <span className="block font-mono text-accent text-[10px] uppercase tracking-[0.4em] mb-6">Investor FAQ</span>
+          <h2 className="text-3xl md:text-4xl font-serif italic mb-12">Questions from international investors</h2>
+          <div className="divide-y divide-border border-y border-border">
+            {faqs.map((f) => (
+              <details key={f.q} className="group py-6">
+                <summary className="cursor-pointer list-none flex items-baseline justify-between gap-6">
+                  <span className="text-lg font-serif">{f.q}</span>
+                  <span className="font-mono text-accent text-xs group-open:rotate-45 transition-transform">+</span>
+                </summary>
+                <p className="text-sm text-muted-foreground mt-4 leading-relaxed max-w-3xl">{f.a}</p>
+              </details>
+            ))}
+          </div>
         </div>
       </section>
     </PageShell>
@@ -420,3 +447,4 @@ function Row({ label, value }: { label: string; value: string }) {
     </div>
   );
 }
+
