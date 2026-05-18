@@ -1,10 +1,11 @@
 import { Link } from "@tanstack/react-router";
+import { whatsappUrl } from "@/lib/contact";
 
 export function ConciergeRail() {
   return (
     <div className="fixed right-6 bottom-8 z-40 flex flex-col gap-3 items-end">
       <a
-        href="https://wa.me/97100000000"
+        href={whatsappUrl("Hello Aureus Capital — I would like to speak with a private advisor about Dubai luxury real estate.")}
         target="_blank"
         rel="noopener noreferrer"
         aria-label="WhatsApp Advisor"
