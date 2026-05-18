@@ -1,5 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useState } from "react";
 import { PageShell } from "@/components/PageShell";
+import { captureLead, whatsappUrl, buildLeadMessage } from "@/lib/contact";
 import heroPalm from "@/assets/hero-palm.jpg";
 import waterfront from "@/assets/collection-waterfront.jpg";
 import skyline from "@/assets/collection-skyline.jpg";
@@ -7,6 +9,14 @@ import branded from "@/assets/collection-branded.jpg";
 import yieldImg from "@/assets/collection-yield.jpg";
 import propSerene from "@/assets/property-serene.jpg";
 import propNoir from "@/assets/property-noir.jpg";
+
+const faqs = [
+  { q: "Can Americans buy property in Dubai?", a: "Yes. U.S. citizens and entities may acquire freehold property in designated zones across Dubai with no residency requirement, full ownership rights, and clear repatriation of capital." },
+  { q: "Is Dubai real estate a good investment?", a: "Dubai offers 0% property and capital gains tax, AED-USD currency stability, gross rental yields of 6–9% in prime districts, and a 10-year Golden Visa for qualifying investors." },
+  { q: "What are the best areas to invest in Dubai?", a: "Palm Jumeirah, Downtown Dubai, Dubai Marina, Emirates Hills, Dubai Hills Estate and Business Bay lead on liquidity, scarcity and net yield." },
+  { q: "Does Dubai have property tax?", a: "No. There is no annual property tax, no capital gains tax, and no income tax on rental yield for individuals." },
+  { q: "Can foreigners own property in Dubai?", a: "Foreign nationals may hold full freehold title in designated freehold zones, with the same protections as UAE nationals." },
+];
 
 export const Route = createFileRoute("/")({
   head: () => ({
