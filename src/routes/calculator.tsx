@@ -82,6 +82,29 @@ function fmtUsd(n: number) {
   return new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 }).format(n);
 }
 
+function exportCsv(d: { price: number; grossYield: number; opex: number; appreciation: number; grossAnnual: number; netAnnual: number; fiveYearValue: number; fiveYearGain: number; irr: number }) {
+  const rows: [string, string | number][] = [
+    ["Acquisition Price (USD)", d.price],
+    ["Gross Rental Yield (%)", d.grossYield],
+    ["Operating Cost (% of gross)", d.opex],
+    ["Annual Appreciation (%)", d.appreciation],
+    ["Gross Annual Income (USD)", Math.round(d.grossAnnual)],
+    ["Net Annual Income (USD)", Math.round(d.netAnnual)],
+    ["5-Year Property Value (USD)", Math.round(d.fiveYearValue)],
+    ["5-Year Capital Gain (USD)", Math.round(d.fiveYearGain)],
+    ["Indicative Annualized Return (%)", d.irr.toFixed(2)],
+  ];
+  const csv = "Metric,Value\n" + rows.map((r) => `"${r[0]}","${r[1]}"`).join("\n");
+  const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `aureus-roi-${new Date().toISOString().slice(0, 10)}.csv`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+
 function Slider({ label, value, min, max, step, format, onChange }: { label: string; value: number; min: number; max: number; step: number; format: (v: number) => string; onChange: (v: number) => void }) {
   return (
     <div>
