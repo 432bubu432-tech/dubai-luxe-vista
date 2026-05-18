@@ -45,10 +45,22 @@ export const Route = createFileRoute("/")({
           "@context": "https://schema.org",
           "@type": "Organization",
           name: "Aureus Capital",
-          description:
-            "Private investment advisory for Dubai luxury real estate.",
+          description: "Private investment advisory for Dubai luxury real estate.",
           url: "/",
-          areaServed: "AE",
+          areaServed: ["AE", "US", "GB"],
+          knowsAbout: ["Dubai luxury real estate", "Palm Jumeirah villas", "Branded residences", "UAE Golden Visa"],
+        }),
+      },
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "FAQPage",
+          mainEntity: faqs.map((f) => ({
+            "@type": "Question",
+            name: f.q,
+            acceptedAnswer: { "@type": "Answer", text: f.a },
+          })),
         }),
       },
     ],
