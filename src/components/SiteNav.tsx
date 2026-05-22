@@ -3,11 +3,12 @@ import { Link } from "@tanstack/react-router";
 const links = [
   { to: "/properties", label: "Properties" },
   { to: "/communities", label: "Communities" },
+  { to: "/heatmap", label: "Heatmap" },
+  { to: "/compare", label: "Compare" },
+  { to: "/quiz", label: "AI Match" },
+  { to: "/dashboard", label: "Dashboard" },
   { to: "/investment", label: "Intelligence" },
-  { to: "/developers", label: "Developers" },
-  { to: "/services", label: "Services" },
   { to: "/insights", label: "Insights" },
-  { to: "/about", label: "About" },
   { to: "/contact", label: "Contact" },
 ] as const;
 
