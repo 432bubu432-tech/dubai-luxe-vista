@@ -463,3 +463,15 @@ function Row({ label, value }: { label: string; value: string }) {
   );
 }
 
+function ToolTile({ to, eyebrow, title, body }: { to: string; eyebrow: string; title: string; body: string }) {
+  return (
+    <Link to={to} className="group bg-background p-10 hover:bg-foreground/[0.03] transition-all">
+      <span className="font-mono text-[10px] uppercase tracking-[0.3em] text-accent">{eyebrow}</span>
+      <h3 className="font-serif text-2xl mt-4 italic leading-tight">{title}</h3>
+      <p className="text-sm text-muted-foreground mt-4 leading-relaxed">{body}</p>
+      <span className="inline-block mt-8 text-[10px] uppercase tracking-[0.3em] text-accent border-b border-accent/40 pb-1 group-hover:border-accent">Enter →</span>
+    </Link>
+  );
+}
+
+
