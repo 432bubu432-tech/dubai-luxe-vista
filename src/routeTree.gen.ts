@@ -11,12 +11,16 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as ServicesRouteImport } from './routes/services'
+import { Route as QuizRouteImport } from './routes/quiz'
 import { Route as PropertiesRouteImport } from './routes/properties'
 import { Route as InvestmentRouteImport } from './routes/investment'
 import { Route as InsightsRouteImport } from './routes/insights'
+import { Route as HeatmapRouteImport } from './routes/heatmap'
 import { Route as DevelopersRouteImport } from './routes/developers'
+import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as ConciergeRouteImport } from './routes/concierge'
+import { Route as CompareRouteImport } from './routes/compare'
 import { Route as CommunitiesRouteImport } from './routes/communities'
 import { Route as CalculatorRouteImport } from './routes/calculator'
 import { Route as AboutRouteImport } from './routes/about'
@@ -30,6 +34,11 @@ const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
 const ServicesRoute = ServicesRouteImport.update({
   id: '/services',
   path: '/services',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const QuizRoute = QuizRouteImport.update({
+  id: '/quiz',
+  path: '/quiz',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PropertiesRoute = PropertiesRouteImport.update({
@@ -47,9 +56,19 @@ const InsightsRoute = InsightsRouteImport.update({
   path: '/insights',
   getParentRoute: () => rootRouteImport,
 } as any)
+const HeatmapRoute = HeatmapRouteImport.update({
+  id: '/heatmap',
+  path: '/heatmap',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const DevelopersRoute = DevelopersRouteImport.update({
   id: '/developers',
   path: '/developers',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DashboardRoute = DashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ContactRoute = ContactRouteImport.update({
@@ -60,6 +79,11 @@ const ContactRoute = ContactRouteImport.update({
 const ConciergeRoute = ConciergeRouteImport.update({
   id: '/concierge',
   path: '/concierge',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CompareRoute = CompareRouteImport.update({
+  id: '/compare',
+  path: '/compare',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CommunitiesRoute = CommunitiesRouteImport.update({
@@ -88,12 +112,16 @@ export interface FileRoutesByFullPath {
   '/about': typeof AboutRoute
   '/calculator': typeof CalculatorRoute
   '/communities': typeof CommunitiesRoute
+  '/compare': typeof CompareRoute
   '/concierge': typeof ConciergeRoute
   '/contact': typeof ContactRoute
+  '/dashboard': typeof DashboardRoute
   '/developers': typeof DevelopersRoute
+  '/heatmap': typeof HeatmapRoute
   '/insights': typeof InsightsRoute
   '/investment': typeof InvestmentRoute
   '/properties': typeof PropertiesRoute
+  '/quiz': typeof QuizRoute
   '/services': typeof ServicesRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
 }
@@ -102,12 +130,16 @@ export interface FileRoutesByTo {
   '/about': typeof AboutRoute
   '/calculator': typeof CalculatorRoute
   '/communities': typeof CommunitiesRoute
+  '/compare': typeof CompareRoute
   '/concierge': typeof ConciergeRoute
   '/contact': typeof ContactRoute
+  '/dashboard': typeof DashboardRoute
   '/developers': typeof DevelopersRoute
+  '/heatmap': typeof HeatmapRoute
   '/insights': typeof InsightsRoute
   '/investment': typeof InvestmentRoute
   '/properties': typeof PropertiesRoute
+  '/quiz': typeof QuizRoute
   '/services': typeof ServicesRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
 }
@@ -117,12 +149,16 @@ export interface FileRoutesById {
   '/about': typeof AboutRoute
   '/calculator': typeof CalculatorRoute
   '/communities': typeof CommunitiesRoute
+  '/compare': typeof CompareRoute
   '/concierge': typeof ConciergeRoute
   '/contact': typeof ContactRoute
+  '/dashboard': typeof DashboardRoute
   '/developers': typeof DevelopersRoute
+  '/heatmap': typeof HeatmapRoute
   '/insights': typeof InsightsRoute
   '/investment': typeof InvestmentRoute
   '/properties': typeof PropertiesRoute
+  '/quiz': typeof QuizRoute
   '/services': typeof ServicesRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
 }
@@ -133,12 +169,16 @@ export interface FileRouteTypes {
     | '/about'
     | '/calculator'
     | '/communities'
+    | '/compare'
     | '/concierge'
     | '/contact'
+    | '/dashboard'
     | '/developers'
+    | '/heatmap'
     | '/insights'
     | '/investment'
     | '/properties'
+    | '/quiz'
     | '/services'
     | '/sitemap.xml'
   fileRoutesByTo: FileRoutesByTo
@@ -147,12 +187,16 @@ export interface FileRouteTypes {
     | '/about'
     | '/calculator'
     | '/communities'
+    | '/compare'
     | '/concierge'
     | '/contact'
+    | '/dashboard'
     | '/developers'
+    | '/heatmap'
     | '/insights'
     | '/investment'
     | '/properties'
+    | '/quiz'
     | '/services'
     | '/sitemap.xml'
   id:
@@ -161,12 +205,16 @@ export interface FileRouteTypes {
     | '/about'
     | '/calculator'
     | '/communities'
+    | '/compare'
     | '/concierge'
     | '/contact'
+    | '/dashboard'
     | '/developers'
+    | '/heatmap'
     | '/insights'
     | '/investment'
     | '/properties'
+    | '/quiz'
     | '/services'
     | '/sitemap.xml'
   fileRoutesById: FileRoutesById
@@ -176,12 +224,16 @@ export interface RootRouteChildren {
   AboutRoute: typeof AboutRoute
   CalculatorRoute: typeof CalculatorRoute
   CommunitiesRoute: typeof CommunitiesRoute
+  CompareRoute: typeof CompareRoute
   ConciergeRoute: typeof ConciergeRoute
   ContactRoute: typeof ContactRoute
+  DashboardRoute: typeof DashboardRoute
   DevelopersRoute: typeof DevelopersRoute
+  HeatmapRoute: typeof HeatmapRoute
   InsightsRoute: typeof InsightsRoute
   InvestmentRoute: typeof InvestmentRoute
   PropertiesRoute: typeof PropertiesRoute
+  QuizRoute: typeof QuizRoute
   ServicesRoute: typeof ServicesRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
 }
@@ -200,6 +252,13 @@ declare module '@tanstack/react-router' {
       path: '/services'
       fullPath: '/services'
       preLoaderRoute: typeof ServicesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/quiz': {
+      id: '/quiz'
+      path: '/quiz'
+      fullPath: '/quiz'
+      preLoaderRoute: typeof QuizRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/properties': {
@@ -223,11 +282,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof InsightsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/heatmap': {
+      id: '/heatmap'
+      path: '/heatmap'
+      fullPath: '/heatmap'
+      preLoaderRoute: typeof HeatmapRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/developers': {
       id: '/developers'
       path: '/developers'
       fullPath: '/developers'
       preLoaderRoute: typeof DevelopersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/dashboard': {
+      id: '/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof DashboardRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/contact': {
@@ -242,6 +315,13 @@ declare module '@tanstack/react-router' {
       path: '/concierge'
       fullPath: '/concierge'
       preLoaderRoute: typeof ConciergeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/compare': {
+      id: '/compare'
+      path: '/compare'
+      fullPath: '/compare'
+      preLoaderRoute: typeof CompareRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/communities': {
@@ -280,12 +360,16 @@ const rootRouteChildren: RootRouteChildren = {
   AboutRoute: AboutRoute,
   CalculatorRoute: CalculatorRoute,
   CommunitiesRoute: CommunitiesRoute,
+  CompareRoute: CompareRoute,
   ConciergeRoute: ConciergeRoute,
   ContactRoute: ContactRoute,
+  DashboardRoute: DashboardRoute,
   DevelopersRoute: DevelopersRoute,
+  HeatmapRoute: HeatmapRoute,
   InsightsRoute: InsightsRoute,
   InvestmentRoute: InvestmentRoute,
   PropertiesRoute: PropertiesRoute,
+  QuizRoute: QuizRoute,
   ServicesRoute: ServicesRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
 }

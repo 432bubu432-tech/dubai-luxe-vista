@@ -417,6 +417,21 @@ function HomePage() {
         </div>
       </section>
 
+      {/* Intelligence tools grid */}
+      <section className="py-28 px-6 md:px-10 border-t border-border">
+        <div className="max-w-screen-2xl mx-auto">
+          <span className="block font-mono text-accent text-[10px] uppercase tracking-[0.4em] mb-6">Intelligence Tools</span>
+          <h2 className="text-3xl md:text-5xl font-serif italic mb-14 max-w-3xl">A private terminal for Dubai investment.</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-px bg-border border border-border">
+            <ToolTile to="/quiz" eyebrow="AI Match" title="Find my ideal Dubai investment" body="A concierge-grade quiz that maps capital, lifestyle and ROI goals to a personalised allocation." />
+            <ToolTile to="/heatmap" eyebrow="Heatmap" title="Dubai investment heatmap" body="Yield, appreciation, demand and momentum visualised across prime districts." />
+            <ToolTile to="/compare" eyebrow="Compare" title="Community benchmark" body="Side-by-side comparison of up to four luxury communities on twelve metrics." />
+            <ToolTile to="/dashboard" eyebrow="Dashboard" title="Investor lounge preview" body="Portfolio NAV, ROI tracking, watchlists and off-market access for qualified clients." />
+          </div>
+        </div>
+      </section>
+
+
       {/* FAQ */}
       <section className="py-28 px-6 md:px-10 border-t border-border">
         <div className="max-w-4xl mx-auto">
@@ -447,4 +462,16 @@ function Row({ label, value }: { label: string; value: string }) {
     </div>
   );
 }
+
+function ToolTile({ to, eyebrow, title, body }: { to: string; eyebrow: string; title: string; body: string }) {
+  return (
+    <Link to={to} className="group bg-background p-10 hover:bg-foreground/[0.03] transition-all">
+      <span className="font-mono text-[10px] uppercase tracking-[0.3em] text-accent">{eyebrow}</span>
+      <h3 className="font-serif text-2xl mt-4 italic leading-tight">{title}</h3>
+      <p className="text-sm text-muted-foreground mt-4 leading-relaxed">{body}</p>
+      <span className="inline-block mt-8 text-[10px] uppercase tracking-[0.3em] text-accent border-b border-accent/40 pb-1 group-hover:border-accent">Enter →</span>
+    </Link>
+  );
+}
+
 

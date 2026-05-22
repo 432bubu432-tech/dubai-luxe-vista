@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 import { SiteNav } from "./SiteNav";
 import { SiteFooter } from "./SiteFooter";
 import { ConciergeRail } from "./ConciergeRail";
+import { ExitIntent } from "./ExitIntent";
 
 export function PageShell({ children }: { children: ReactNode }) {
   return (
@@ -10,6 +11,7 @@ export function PageShell({ children }: { children: ReactNode }) {
       <main className="pt-20">{children}</main>
       <SiteFooter />
       <ConciergeRail />
+      <ExitIntent />
     </div>
   );
 }
