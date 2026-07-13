@@ -3,6 +3,8 @@ import { SiteNav } from "./SiteNav";
 import { SiteFooter } from "./SiteFooter";
 import { ConciergeRail } from "./ConciergeRail";
 import { ExitIntent } from "./ExitIntent";
+import { AIConcierge } from "./AIConcierge";
+import { ActivityTicker } from "./ActivityTicker";
 
 export function PageShell({ children }: { children: ReactNode }) {
   return (
@@ -12,6 +14,10 @@ export function PageShell({ children }: { children: ReactNode }) {
       <SiteFooter />
       <ConciergeRail />
       <ExitIntent />
+      <AIConcierge />
+      <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-30 pointer-events-none">
+        <div className="pointer-events-auto"><ActivityTicker /></div>
+      </div>
     </div>
   );
 }
