@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as VaultRouteImport } from './routes/vault'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as ServicesRouteImport } from './routes/services'
 import { Route as QuizRouteImport } from './routes/quiz'
@@ -23,9 +24,15 @@ import { Route as ConciergeRouteImport } from './routes/concierge'
 import { Route as CompareRouteImport } from './routes/compare'
 import { Route as CommunitiesRouteImport } from './routes/communities'
 import { Route as CalculatorRouteImport } from './routes/calculator'
+import { Route as AcademyRouteImport } from './routes/academy'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
 
+const VaultRoute = VaultRouteImport.update({
+  id: '/vault',
+  path: '/vault',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   id: '/sitemap.xml',
   path: '/sitemap.xml',
@@ -96,6 +103,11 @@ const CalculatorRoute = CalculatorRouteImport.update({
   path: '/calculator',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AcademyRoute = AcademyRouteImport.update({
+  id: '/academy',
+  path: '/academy',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AboutRoute = AboutRouteImport.update({
   id: '/about',
   path: '/about',
@@ -110,6 +122,7 @@ const IndexRoute = IndexRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/academy': typeof AcademyRoute
   '/calculator': typeof CalculatorRoute
   '/communities': typeof CommunitiesRoute
   '/compare': typeof CompareRoute
@@ -124,10 +137,12 @@ export interface FileRoutesByFullPath {
   '/quiz': typeof QuizRoute
   '/services': typeof ServicesRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/vault': typeof VaultRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/academy': typeof AcademyRoute
   '/calculator': typeof CalculatorRoute
   '/communities': typeof CommunitiesRoute
   '/compare': typeof CompareRoute
@@ -142,11 +157,13 @@ export interface FileRoutesByTo {
   '/quiz': typeof QuizRoute
   '/services': typeof ServicesRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/vault': typeof VaultRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/academy': typeof AcademyRoute
   '/calculator': typeof CalculatorRoute
   '/communities': typeof CommunitiesRoute
   '/compare': typeof CompareRoute
@@ -161,12 +178,14 @@ export interface FileRoutesById {
   '/quiz': typeof QuizRoute
   '/services': typeof ServicesRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/vault': typeof VaultRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
     | '/about'
+    | '/academy'
     | '/calculator'
     | '/communities'
     | '/compare'
@@ -181,10 +200,12 @@ export interface FileRouteTypes {
     | '/quiz'
     | '/services'
     | '/sitemap.xml'
+    | '/vault'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/about'
+    | '/academy'
     | '/calculator'
     | '/communities'
     | '/compare'
@@ -199,10 +220,12 @@ export interface FileRouteTypes {
     | '/quiz'
     | '/services'
     | '/sitemap.xml'
+    | '/vault'
   id:
     | '__root__'
     | '/'
     | '/about'
+    | '/academy'
     | '/calculator'
     | '/communities'
     | '/compare'
@@ -217,11 +240,13 @@ export interface FileRouteTypes {
     | '/quiz'
     | '/services'
     | '/sitemap.xml'
+    | '/vault'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
+  AcademyRoute: typeof AcademyRoute
   CalculatorRoute: typeof CalculatorRoute
   CommunitiesRoute: typeof CommunitiesRoute
   CompareRoute: typeof CompareRoute
@@ -236,10 +261,18 @@ export interface RootRouteChildren {
   QuizRoute: typeof QuizRoute
   ServicesRoute: typeof ServicesRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
+  VaultRoute: typeof VaultRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/vault': {
+      id: '/vault'
+      path: '/vault'
+      fullPath: '/vault'
+      preLoaderRoute: typeof VaultRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/sitemap.xml': {
       id: '/sitemap.xml'
       path: '/sitemap.xml'
@@ -338,6 +371,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CalculatorRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/academy': {
+      id: '/academy'
+      path: '/academy'
+      fullPath: '/academy'
+      preLoaderRoute: typeof AcademyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/about': {
       id: '/about'
       path: '/about'
@@ -358,6 +398,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
+  AcademyRoute: AcademyRoute,
   CalculatorRoute: CalculatorRoute,
   CommunitiesRoute: CommunitiesRoute,
   CompareRoute: CompareRoute,
@@ -372,17 +413,8 @@ const rootRouteChildren: RootRouteChildren = {
   QuizRoute: QuizRoute,
   ServicesRoute: ServicesRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
+  VaultRoute: VaultRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
