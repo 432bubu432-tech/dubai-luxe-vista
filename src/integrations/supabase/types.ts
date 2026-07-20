@@ -14,7 +14,180 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      brochure_leads: {
+        Row: {
+          created_at: string
+          email: string
+          id: string
+          message: string | null
+          name: string
+          phone: string | null
+          property_id: string | null
+          source: string | null
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          id?: string
+          message?: string | null
+          name: string
+          phone?: string | null
+          property_id?: string | null
+          source?: string | null
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          id?: string
+          message?: string | null
+          name?: string
+          phone?: string | null
+          property_id?: string | null
+          source?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "brochure_leads_property_id_fkey"
+            columns: ["property_id"]
+            isOneToOne: false
+            referencedRelation: "properties"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      properties: {
+        Row: {
+          amenities: Json
+          bedrooms: string | null
+          category: string
+          created_at: string
+          description: string | null
+          developer: string | null
+          drive_folder_id: string
+          hero_image_url: string | null
+          id: string
+          location: string | null
+          name: string
+          price: string | null
+          published: boolean
+          slug: string
+          specs: Json
+          updated_at: string
+        }
+        Insert: {
+          amenities?: Json
+          bedrooms?: string | null
+          category: string
+          created_at?: string
+          description?: string | null
+          developer?: string | null
+          drive_folder_id: string
+          hero_image_url?: string | null
+          id?: string
+          location?: string | null
+          name: string
+          price?: string | null
+          published?: boolean
+          slug: string
+          specs?: Json
+          updated_at?: string
+        }
+        Update: {
+          amenities?: Json
+          bedrooms?: string | null
+          category?: string
+          created_at?: string
+          description?: string | null
+          developer?: string | null
+          drive_folder_id?: string
+          hero_image_url?: string | null
+          id?: string
+          location?: string | null
+          name?: string
+          price?: string | null
+          published?: boolean
+          slug?: string
+          specs?: Json
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      property_events: {
+        Row: {
+          created_at: string
+          event: string
+          id: number
+          meta: Json
+          property_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          event: string
+          id?: number
+          meta?: Json
+          property_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          event?: string
+          id?: number
+          meta?: Json
+          property_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "property_events_property_id_fkey"
+            columns: ["property_id"]
+            isOneToOne: false
+            referencedRelation: "properties"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      property_media: {
+        Row: {
+          created_at: string
+          drive_file_id: string
+          id: string
+          kind: string
+          mime: string | null
+          position: number
+          property_id: string
+          size_bytes: number | null
+          storage_path: string
+        }
+        Insert: {
+          created_at?: string
+          drive_file_id: string
+          id?: string
+          kind: string
+          mime?: string | null
+          position?: number
+          property_id: string
+          size_bytes?: number | null
+          storage_path: string
+        }
+        Update: {
+          created_at?: string
+          drive_file_id?: string
+          id?: string
+          kind?: string
+          mime?: string | null
+          position?: number
+          property_id?: string
+          size_bytes?: number | null
+          storage_path?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "property_media_property_id_fkey"
+            columns: ["property_id"]
+            isOneToOne: false
+            referencedRelation: "properties"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
