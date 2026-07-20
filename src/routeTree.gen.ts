@@ -27,6 +27,8 @@ import { Route as CalculatorRouteImport } from './routes/calculator'
 import { Route as AcademyRouteImport } from './routes/academy'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as PropertiesSlugRouteImport } from './routes/properties.$slug'
+import { Route as AdminImportRouteImport } from './routes/admin.import'
 import { Route as ApiPublicBrochureRouteImport } from './routes/api/public/brochure'
 import { Route as ApiPublicDriveFileIdRouteImport } from './routes/api/public/drive.$fileId'
 
@@ -120,6 +122,16 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PropertiesSlugRoute = PropertiesSlugRouteImport.update({
+  id: '/$slug',
+  path: '/$slug',
+  getParentRoute: () => PropertiesRoute,
+} as any)
+const AdminImportRoute = AdminImportRouteImport.update({
+  id: '/admin/import',
+  path: '/admin/import',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiPublicBrochureRoute = ApiPublicBrochureRouteImport.update({
   id: '/api/public/brochure',
   path: '/api/public/brochure',
@@ -145,11 +157,13 @@ export interface FileRoutesByFullPath {
   '/heatmap': typeof HeatmapRoute
   '/insights': typeof InsightsRoute
   '/investment': typeof InvestmentRoute
-  '/properties': typeof PropertiesRoute
+  '/properties': typeof PropertiesRouteWithChildren
   '/quiz': typeof QuizRoute
   '/services': typeof ServicesRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/vault': typeof VaultRoute
+  '/admin/import': typeof AdminImportRoute
+  '/properties/$slug': typeof PropertiesSlugRoute
   '/api/public/brochure': typeof ApiPublicBrochureRoute
   '/api/public/drive/$fileId': typeof ApiPublicDriveFileIdRoute
 }
@@ -167,11 +181,13 @@ export interface FileRoutesByTo {
   '/heatmap': typeof HeatmapRoute
   '/insights': typeof InsightsRoute
   '/investment': typeof InvestmentRoute
-  '/properties': typeof PropertiesRoute
+  '/properties': typeof PropertiesRouteWithChildren
   '/quiz': typeof QuizRoute
   '/services': typeof ServicesRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/vault': typeof VaultRoute
+  '/admin/import': typeof AdminImportRoute
+  '/properties/$slug': typeof PropertiesSlugRoute
   '/api/public/brochure': typeof ApiPublicBrochureRoute
   '/api/public/drive/$fileId': typeof ApiPublicDriveFileIdRoute
 }
@@ -190,11 +206,13 @@ export interface FileRoutesById {
   '/heatmap': typeof HeatmapRoute
   '/insights': typeof InsightsRoute
   '/investment': typeof InvestmentRoute
-  '/properties': typeof PropertiesRoute
+  '/properties': typeof PropertiesRouteWithChildren
   '/quiz': typeof QuizRoute
   '/services': typeof ServicesRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/vault': typeof VaultRoute
+  '/admin/import': typeof AdminImportRoute
+  '/properties/$slug': typeof PropertiesSlugRoute
   '/api/public/brochure': typeof ApiPublicBrochureRoute
   '/api/public/drive/$fileId': typeof ApiPublicDriveFileIdRoute
 }
@@ -219,6 +237,8 @@ export interface FileRouteTypes {
     | '/services'
     | '/sitemap.xml'
     | '/vault'
+    | '/admin/import'
+    | '/properties/$slug'
     | '/api/public/brochure'
     | '/api/public/drive/$fileId'
   fileRoutesByTo: FileRoutesByTo
@@ -241,6 +261,8 @@ export interface FileRouteTypes {
     | '/services'
     | '/sitemap.xml'
     | '/vault'
+    | '/admin/import'
+    | '/properties/$slug'
     | '/api/public/brochure'
     | '/api/public/drive/$fileId'
   id:
@@ -263,6 +285,8 @@ export interface FileRouteTypes {
     | '/services'
     | '/sitemap.xml'
     | '/vault'
+    | '/admin/import'
+    | '/properties/$slug'
     | '/api/public/brochure'
     | '/api/public/drive/$fileId'
   fileRoutesById: FileRoutesById
@@ -281,11 +305,12 @@ export interface RootRouteChildren {
   HeatmapRoute: typeof HeatmapRoute
   InsightsRoute: typeof InsightsRoute
   InvestmentRoute: typeof InvestmentRoute
-  PropertiesRoute: typeof PropertiesRoute
+  PropertiesRoute: typeof PropertiesRouteWithChildren
   QuizRoute: typeof QuizRoute
   ServicesRoute: typeof ServicesRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   VaultRoute: typeof VaultRoute
+  AdminImportRoute: typeof AdminImportRoute
   ApiPublicBrochureRoute: typeof ApiPublicBrochureRoute
   ApiPublicDriveFileIdRoute: typeof ApiPublicDriveFileIdRoute
 }
@@ -418,6 +443,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/properties/$slug': {
+      id: '/properties/$slug'
+      path: '/$slug'
+      fullPath: '/properties/$slug'
+      preLoaderRoute: typeof PropertiesSlugRouteImport
+      parentRoute: typeof PropertiesRoute
+    }
+    '/admin/import': {
+      id: '/admin/import'
+      path: '/admin/import'
+      fullPath: '/admin/import'
+      preLoaderRoute: typeof AdminImportRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/public/brochure': {
       id: '/api/public/brochure'
       path: '/api/public/brochure'
@@ -435,6 +474,18 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface PropertiesRouteChildren {
+  PropertiesSlugRoute: typeof PropertiesSlugRoute
+}
+
+const PropertiesRouteChildren: PropertiesRouteChildren = {
+  PropertiesSlugRoute: PropertiesSlugRoute,
+}
+
+const PropertiesRouteWithChildren = PropertiesRoute._addFileChildren(
+  PropertiesRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
@@ -449,11 +500,12 @@ const rootRouteChildren: RootRouteChildren = {
   HeatmapRoute: HeatmapRoute,
   InsightsRoute: InsightsRoute,
   InvestmentRoute: InvestmentRoute,
-  PropertiesRoute: PropertiesRoute,
+  PropertiesRoute: PropertiesRouteWithChildren,
   QuizRoute: QuizRoute,
   ServicesRoute: ServicesRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   VaultRoute: VaultRoute,
+  AdminImportRoute: AdminImportRoute,
   ApiPublicBrochureRoute: ApiPublicBrochureRoute,
   ApiPublicDriveFileIdRoute: ApiPublicDriveFileIdRoute,
 }
