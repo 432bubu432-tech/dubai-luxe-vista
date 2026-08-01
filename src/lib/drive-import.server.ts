@@ -216,7 +216,7 @@ export async function runImport(): Promise<ImportSummary> {
     await supabaseAdmin
       .from("properties")
       .update({ published: false })
-      .not("id", "in", `(${keep.join(",")})`);
+      .not("id", "in", `("${keep.join('","')}")`);
   }
 
   return summary;

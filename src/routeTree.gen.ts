@@ -29,6 +29,7 @@ import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as PropertiesSlugRouteImport } from './routes/properties.$slug'
 import { Route as AdminImportRouteImport } from './routes/admin.import'
+import { Route as ApiPublicDriveImportRouteImport } from './routes/api/public/drive-import'
 import { Route as ApiPublicBrochureRouteImport } from './routes/api/public/brochure'
 import { Route as ApiPublicDriveFileIdRouteImport } from './routes/api/public/drive.$fileId'
 
@@ -132,6 +133,11 @@ const AdminImportRoute = AdminImportRouteImport.update({
   path: '/admin/import',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicDriveImportRoute = ApiPublicDriveImportRouteImport.update({
+  id: '/api/public/drive-import',
+  path: '/api/public/drive-import',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiPublicBrochureRoute = ApiPublicBrochureRouteImport.update({
   id: '/api/public/brochure',
   path: '/api/public/brochure',
@@ -165,6 +171,7 @@ export interface FileRoutesByFullPath {
   '/admin/import': typeof AdminImportRoute
   '/properties/$slug': typeof PropertiesSlugRoute
   '/api/public/brochure': typeof ApiPublicBrochureRoute
+  '/api/public/drive-import': typeof ApiPublicDriveImportRoute
   '/api/public/drive/$fileId': typeof ApiPublicDriveFileIdRoute
 }
 export interface FileRoutesByTo {
@@ -189,6 +196,7 @@ export interface FileRoutesByTo {
   '/admin/import': typeof AdminImportRoute
   '/properties/$slug': typeof PropertiesSlugRoute
   '/api/public/brochure': typeof ApiPublicBrochureRoute
+  '/api/public/drive-import': typeof ApiPublicDriveImportRoute
   '/api/public/drive/$fileId': typeof ApiPublicDriveFileIdRoute
 }
 export interface FileRoutesById {
@@ -214,6 +222,7 @@ export interface FileRoutesById {
   '/admin/import': typeof AdminImportRoute
   '/properties/$slug': typeof PropertiesSlugRoute
   '/api/public/brochure': typeof ApiPublicBrochureRoute
+  '/api/public/drive-import': typeof ApiPublicDriveImportRoute
   '/api/public/drive/$fileId': typeof ApiPublicDriveFileIdRoute
 }
 export interface FileRouteTypes {
@@ -240,6 +249,7 @@ export interface FileRouteTypes {
     | '/admin/import'
     | '/properties/$slug'
     | '/api/public/brochure'
+    | '/api/public/drive-import'
     | '/api/public/drive/$fileId'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -264,6 +274,7 @@ export interface FileRouteTypes {
     | '/admin/import'
     | '/properties/$slug'
     | '/api/public/brochure'
+    | '/api/public/drive-import'
     | '/api/public/drive/$fileId'
   id:
     | '__root__'
@@ -288,6 +299,7 @@ export interface FileRouteTypes {
     | '/admin/import'
     | '/properties/$slug'
     | '/api/public/brochure'
+    | '/api/public/drive-import'
     | '/api/public/drive/$fileId'
   fileRoutesById: FileRoutesById
 }
@@ -312,6 +324,7 @@ export interface RootRouteChildren {
   VaultRoute: typeof VaultRoute
   AdminImportRoute: typeof AdminImportRoute
   ApiPublicBrochureRoute: typeof ApiPublicBrochureRoute
+  ApiPublicDriveImportRoute: typeof ApiPublicDriveImportRoute
   ApiPublicDriveFileIdRoute: typeof ApiPublicDriveFileIdRoute
 }
 
@@ -457,6 +470,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminImportRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/drive-import': {
+      id: '/api/public/drive-import'
+      path: '/api/public/drive-import'
+      fullPath: '/api/public/drive-import'
+      preLoaderRoute: typeof ApiPublicDriveImportRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/public/brochure': {
       id: '/api/public/brochure'
       path: '/api/public/brochure'
@@ -507,18 +527,9 @@ const rootRouteChildren: RootRouteChildren = {
   VaultRoute: VaultRoute,
   AdminImportRoute: AdminImportRoute,
   ApiPublicBrochureRoute: ApiPublicBrochureRoute,
+  ApiPublicDriveImportRoute: ApiPublicDriveImportRoute,
   ApiPublicDriveFileIdRoute: ApiPublicDriveFileIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
