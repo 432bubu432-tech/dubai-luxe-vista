@@ -28,6 +28,7 @@ import { Route as AcademyRouteImport } from './routes/academy'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as PropertiesSlugRouteImport } from './routes/properties.$slug'
+import { Route as CollectionsCategoryRouteImport } from './routes/collections.$category'
 import { Route as AdminImportRouteImport } from './routes/admin.import'
 import { Route as ApiPublicDriveImportRouteImport } from './routes/api/public/drive-import'
 import { Route as ApiPublicBrochureRouteImport } from './routes/api/public/brochure'
@@ -128,6 +129,11 @@ const PropertiesSlugRoute = PropertiesSlugRouteImport.update({
   path: '/$slug',
   getParentRoute: () => PropertiesRoute,
 } as any)
+const CollectionsCategoryRoute = CollectionsCategoryRouteImport.update({
+  id: '/collections/$category',
+  path: '/collections/$category',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AdminImportRoute = AdminImportRouteImport.update({
   id: '/admin/import',
   path: '/admin/import',
@@ -169,6 +175,7 @@ export interface FileRoutesByFullPath {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/vault': typeof VaultRoute
   '/admin/import': typeof AdminImportRoute
+  '/collections/$category': typeof CollectionsCategoryRoute
   '/properties/$slug': typeof PropertiesSlugRoute
   '/api/public/brochure': typeof ApiPublicBrochureRoute
   '/api/public/drive-import': typeof ApiPublicDriveImportRoute
@@ -194,6 +201,7 @@ export interface FileRoutesByTo {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/vault': typeof VaultRoute
   '/admin/import': typeof AdminImportRoute
+  '/collections/$category': typeof CollectionsCategoryRoute
   '/properties/$slug': typeof PropertiesSlugRoute
   '/api/public/brochure': typeof ApiPublicBrochureRoute
   '/api/public/drive-import': typeof ApiPublicDriveImportRoute
@@ -220,6 +228,7 @@ export interface FileRoutesById {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/vault': typeof VaultRoute
   '/admin/import': typeof AdminImportRoute
+  '/collections/$category': typeof CollectionsCategoryRoute
   '/properties/$slug': typeof PropertiesSlugRoute
   '/api/public/brochure': typeof ApiPublicBrochureRoute
   '/api/public/drive-import': typeof ApiPublicDriveImportRoute
@@ -247,6 +256,7 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/vault'
     | '/admin/import'
+    | '/collections/$category'
     | '/properties/$slug'
     | '/api/public/brochure'
     | '/api/public/drive-import'
@@ -272,6 +282,7 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/vault'
     | '/admin/import'
+    | '/collections/$category'
     | '/properties/$slug'
     | '/api/public/brochure'
     | '/api/public/drive-import'
@@ -297,6 +308,7 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/vault'
     | '/admin/import'
+    | '/collections/$category'
     | '/properties/$slug'
     | '/api/public/brochure'
     | '/api/public/drive-import'
@@ -323,6 +335,7 @@ export interface RootRouteChildren {
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   VaultRoute: typeof VaultRoute
   AdminImportRoute: typeof AdminImportRoute
+  CollectionsCategoryRoute: typeof CollectionsCategoryRoute
   ApiPublicBrochureRoute: typeof ApiPublicBrochureRoute
   ApiPublicDriveImportRoute: typeof ApiPublicDriveImportRoute
   ApiPublicDriveFileIdRoute: typeof ApiPublicDriveFileIdRoute
@@ -463,6 +476,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PropertiesSlugRouteImport
       parentRoute: typeof PropertiesRoute
     }
+    '/collections/$category': {
+      id: '/collections/$category'
+      path: '/collections/$category'
+      fullPath: '/collections/$category'
+      preLoaderRoute: typeof CollectionsCategoryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/admin/import': {
       id: '/admin/import'
       path: '/admin/import'
@@ -526,6 +546,7 @@ const rootRouteChildren: RootRouteChildren = {
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   VaultRoute: VaultRoute,
   AdminImportRoute: AdminImportRoute,
+  CollectionsCategoryRoute: CollectionsCategoryRoute,
   ApiPublicBrochureRoute: ApiPublicBrochureRoute,
   ApiPublicDriveImportRoute: ApiPublicDriveImportRoute,
   ApiPublicDriveFileIdRoute: ApiPublicDriveFileIdRoute,
