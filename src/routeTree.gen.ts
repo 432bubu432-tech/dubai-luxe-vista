@@ -125,9 +125,9 @@ const PropertiesIndexRoute = PropertiesIndexRouteImport.update({
   getParentRoute: () => rootRouteImport,
 } as any)
 const PropertiesSlugRoute = PropertiesSlugRouteImport.update({
-  id: '/properties/$slug',
-  path: '/properties/$slug',
-  getParentRoute: () => rootRouteImport,
+  id: '/$slug',
+  path: '/$slug',
+  getParentRoute: () => PropertiesRoute,
 } as any)
 const CollectionsCategoryRoute = CollectionsCategoryRouteImport.update({
   id: '/collections/$category',
@@ -335,7 +335,6 @@ export interface RootRouteChildren {
   VaultRoute: typeof VaultRoute
   AdminImportRoute: typeof AdminImportRoute
   CollectionsCategoryRoute: typeof CollectionsCategoryRoute
-  PropertiesSlugRoute: typeof PropertiesSlugRoute
   PropertiesIndexRoute: typeof PropertiesIndexRoute
   ApiPublicBrochureRoute: typeof ApiPublicBrochureRoute
   ApiPublicDriveImportRoute: typeof ApiPublicDriveImportRoute
@@ -472,10 +471,10 @@ declare module '@tanstack/react-router' {
     }
     '/properties/$slug': {
       id: '/properties/$slug'
-      path: '/properties/$slug'
+      path: '/$slug'
       fullPath: '/properties/$slug'
       preLoaderRoute: typeof PropertiesSlugRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof PropertiesRoute
     }
     '/collections/$category': {
       id: '/collections/$category'
@@ -535,7 +534,6 @@ const rootRouteChildren: RootRouteChildren = {
   VaultRoute: VaultRoute,
   AdminImportRoute: AdminImportRoute,
   CollectionsCategoryRoute: CollectionsCategoryRoute,
-  PropertiesSlugRoute: PropertiesSlugRoute,
   PropertiesIndexRoute: PropertiesIndexRoute,
   ApiPublicBrochureRoute: ApiPublicBrochureRoute,
   ApiPublicDriveImportRoute: ApiPublicDriveImportRoute,
@@ -544,3 +542,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
