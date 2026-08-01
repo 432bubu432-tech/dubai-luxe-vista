@@ -1,14 +1,10 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
+import { useMemo, useState } from "react";
 import { PageShell, PageHero } from "@/components/PageShell";
+import { PropertyCard } from "@/components/PropertyCard";
 import { listProperties } from "@/lib/property-queries.functions";
-import { categoryLabel, DRIVE_CATEGORY_MAP } from "@/lib/drive";
-import waterfront from "@/assets/collection-waterfront.jpg";
-import skyline from "@/assets/collection-skyline.jpg";
-import branded from "@/assets/collection-branded.jpg";
-import yieldImg from "@/assets/collection-yield.jpg";
-import propSerene from "@/assets/property-serene.jpg";
-import propNoir from "@/assets/property-noir.jpg";
+import { CATEGORIES } from "@/lib/drive";
 
 const propertiesQuery = queryOptions({
   queryKey: ["properties", "all"],
@@ -19,14 +15,18 @@ export const Route = createFileRoute("/properties")({
   loader: ({ context }) => context.queryClient.ensureQueryData(propertiesQuery),
   head: () => ({
     meta: [
-      { title: "Curated Dubai Luxury Real Estate Portfolio — Aureus Capital" },
+      { title: "Dubai Luxury Property Portfolio — 80+ Live Residences | Aureus Capital" },
       {
         name: "description",
         content:
-          "A hand-selected portfolio of Dubai's most exclusive residential and investment-grade properties. Waterfront villas, branded residences, skyline penthouses.",
+          "Browse the live Aureus Capital portfolio: signature villas, branded residences, skyline towers, waterfront homes and yield assets across Dubai, with full media on file.",
       },
-      { property: "og:title", content: "Curated Dubai Luxury Real Estate Portfolio" },
-      { property: "og:description", content: "Hand-selected Dubai investment-grade properties." },
+      { property: "og:title", content: "Dubai Luxury Property Portfolio — Aureus Capital" },
+      {
+        property: "og:description",
+        content:
+          "The live Aureus Capital portfolio of Dubai villas, branded residences, skyline towers and waterfront homes.",
+      },
       { property: "og:url", content: "/properties" },
     ],
     links: [{ rel: "canonical", href: "/properties" }],
@@ -34,133 +34,124 @@ export const Route = createFileRoute("/properties")({
   component: PropertiesPage,
 });
 
-const filters = [
-  { label: "Collection", options: Object.values(DRIVE_CATEGORY_MAP).map((c) => c.label) },
-  { label: "Strategy", options: ["Yield", "Appreciation", "Hybrid"] },
-  { label: "Privacy", options: ["Ultra Private", "Semi-Private", "Active Urban"] },
-  { label: "Ownership", options: ["End Use", "Investment", "Vacation"] },
-];
-
-const fallbackItems = [
-  { name: "The Serene Shore Villa", area: "Palm Jumeirah", price: "$14.2M", roi: "7.2%", img: propSerene },
-  { name: "Penthouse Noir", area: "Downtown Dubai", price: "$8.5M", roi: "9.1%", img: propNoir },
-  { name: "Marina Light Residence", area: "Dubai Marina", price: "$4.9M", roi: "8.6%", img: skyline },
-  { name: "Hills Private Estate", area: "Emirates Hills", price: "$22.0M", roi: "5.4%", img: waterfront },
-  { name: "The Atelier Branded", area: "Business Bay", price: "$3.7M", roi: "9.4%", img: branded },
-  { name: "Tower Yield 14", area: "Business Bay", price: "$1.8M", roi: "11.2%", img: yieldImg },
-];
-
 function PropertiesPage() {
   const { data: properties } = useSuspenseQuery(propertiesQuery);
-  const hasLive = properties.length > 0;
+  const [category, setCategory] = useState<string>("all");
+  const [developer, setDeveloper] = useState<string>("all");
+  const [q, setQ] = useState("");
+
+  const developers = useMemo(
+    () =>
+      Array.from(new Set(properties.map((p) => p.developer).filter(Boolean) as string[])).sort(),
+    [properties],
+  );
+
+  const visible = properties.filter((p) => {
+    if (category !== "all" && p.category !== category) return false;
+    if (developer !== "all" && p.developer !== developer) return false;
+    if (q) {
+      const hay = `${p.name} ${p.developer ?? ""} ${p.location ?? ""}`.toLowerCase();
+      if (!hay.includes(q.toLowerCase())) return false;
+    }
+    return true;
+  });
 
   return (
     <PageShell>
       <PageHero
         eyebrow="The Portfolio"
-        title={<>Curated Dubai Luxury <span className="italic">Real Estate</span></>}
-        intro="A hand-selected portfolio of Dubai's most exclusive residential and investment-grade properties — vetted across 42 financial and architectural criteria."
+        title={
+          <>
+            {properties.length} live Dubai <span className="italic">residences</span>
+          </>
+        }
+        intro="Every property below is held in our own library — architectural imagery, floor plates and developer documentation included. Filter by collection, developer or address."
       />
 
       {/* Filters */}
-      <section className="px-6 md:px-10 py-12 border-b border-border">
-        <div className="max-w-screen-2xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-8">
-          {filters.map((f) => (
-            <div key={f.label}>
-              <p className="text-[10px] uppercase tracking-[0.25em] text-accent font-mono mb-3">
-                {f.label}
-              </p>
-              <ul className="space-y-1.5 text-sm text-muted-foreground">
-                {f.options.map((o) => (
-                  <li key={o}>
-                    <button className="hover:text-foreground transition-colors text-left">{o}</button>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
+      <section className="px-6 md:px-10 py-10 border-b border-border sticky top-20 z-30 bg-background/90 backdrop-blur-md">
+        <div className="max-w-screen-2xl mx-auto flex flex-col gap-6">
+          <div className="flex flex-wrap gap-2">
+            <FilterChip active={category === "all"} onClick={() => setCategory("all")}>
+              All collections
+            </FilterChip>
+            {CATEGORIES.map((c) => (
+              <FilterChip key={c.key} active={category === c.key} onClick={() => setCategory(c.key)}>
+                {c.label}
+              </FilterChip>
+            ))}
+          </div>
+          <div className="flex flex-wrap items-center gap-4">
+            <label className="sr-only" htmlFor="search">
+              Search residences
+            </label>
+            <input
+              id="search"
+              value={q}
+              onChange={(e) => setQ(e.target.value)}
+              placeholder="Search by name, developer or district"
+              className="flex-1 min-w-[240px] bg-transparent border border-border px-5 py-3 text-sm focus:outline-none focus:border-accent"
+            />
+            <label className="sr-only" htmlFor="developer">
+              Developer
+            </label>
+            <select
+              id="developer"
+              value={developer}
+              onChange={(e) => setDeveloper(e.target.value)}
+              className="bg-background border border-border px-5 py-3 text-[11px] uppercase tracking-[0.2em] focus:outline-none focus:border-accent"
+            >
+              <option value="all">All developers</option>
+              {developers.map((d) => (
+                <option key={d} value={d}>
+                  {d}
+                </option>
+              ))}
+            </select>
+            <span className="font-mono text-[10px] uppercase tracking-[0.25em] text-muted-foreground">
+              {visible.length} shown
+            </span>
+          </div>
         </div>
       </section>
 
-      {/* Live listings from Drive */}
-      {hasLive && (
-        <section className="px-6 md:px-10 py-20">
-          <div className="max-w-screen-2xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-px bg-border border-y border-border">
-            {properties.map((p) => (
-              <Link
-                key={p.id}
-                to="/properties/$slug"
-                params={{ slug: p.slug }}
-                className="group bg-background overflow-hidden block"
-              >
-                <div className="aspect-[4/5] overflow-hidden bg-muted">
-                  {p.hero_image_url ? (
-                    <img
-                      src={p.hero_image_url}
-                      alt={p.name}
-                      loading="lazy"
-                      className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700"
-                    />
-                  ) : (
-                    <div className="w-full h-full bg-muted flex items-center justify-center text-muted-foreground font-mono text-xs">
-                      {categoryLabel(p.category)}
-                    </div>
-                  )}
-                </div>
-                <div className="p-8">
-                  <div className="flex items-center justify-between text-[10px] uppercase tracking-[0.25em] text-muted-foreground font-mono">
-                    <span>{p.location ?? categoryLabel(p.category)}</span>
-                    {p.bedrooms && <span className="text-accent">{p.bedrooms}</span>}
-                  </div>
-                  <h3 className="text-2xl font-serif mt-4">{p.name}</h3>
-                  <div className="mt-6 flex items-center justify-between">
-                    <span className="font-serif text-accent">{p.price ?? "On request"}</span>
-                    <span className="text-[10px] uppercase tracking-[0.25em] border-b border-accent/40 pb-1 group-hover:text-accent">
-                      View →
-                    </span>
-                  </div>
-                </div>
-              </Link>
-            ))}
-          </div>
-        </section>
-      )}
-
-      {/* Fallback preview when Drive hasn't been imported yet */}
-      {!hasLive && (
-        <section className="px-6 md:px-10 py-20">
-          <div className="max-w-screen-2xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-px bg-border border-y border-border">
-            {fallbackItems.map((p) => (
-              <article key={p.name} className="group bg-background overflow-hidden">
-                <div className="aspect-[4/5] overflow-hidden">
-                  <img
-                    src={p.img}
-                    alt={p.name}
-                    loading="lazy"
-                    className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700"
-                  />
-                </div>
-                <div className="p-8">
-                  <div className="flex items-center justify-between text-[10px] uppercase tracking-[0.25em] text-muted-foreground font-mono">
-                    <span>{p.area}</span>
-                    <span className="text-accent">ROI {p.roi}</span>
-                  </div>
-                  <h3 className="text-2xl font-serif mt-4">{p.name}</h3>
-                  <div className="mt-6 flex items-center justify-between">
-                    <span className="font-serif text-accent">{p.price}</span>
-                    <Link
-                      to="/concierge"
-                      className="text-[10px] uppercase tracking-[0.25em] border-b border-accent/40 pb-1 hover:text-accent"
-                    >
-                      Request Access
-                    </Link>
-                  </div>
-                </div>
-              </article>
-            ))}
-          </div>
-        </section>
-      )}
+      <section className="px-6 md:px-10 py-16">
+        <div className="max-w-screen-2xl mx-auto">
+          {visible.length ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+              {visible.map((p, i) => (
+                <PropertyCard key={p.slug} property={p} index={i} />
+              ))}
+            </div>
+          ) : (
+            <p className="py-24 text-center text-muted-foreground">
+              No residences match those filters. Adjust your criteria or speak with an advisor.
+            </p>
+          )}
+        </div>
+      </section>
     </PageShell>
+  );
+}
+
+function FilterChip({
+  active,
+  onClick,
+  children,
+}: {
+  active: boolean;
+  onClick: () => void;
+  children: React.ReactNode;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className={`px-4 py-2 text-[10px] font-mono uppercase tracking-[0.25em] border transition-colors ${
+        active ? "border-accent text-accent" : "border-border text-muted-foreground hover:border-accent"
+      }`}
+    >
+      {children}
+    </button>
   );
 }
