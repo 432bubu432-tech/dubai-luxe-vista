@@ -13,7 +13,6 @@ import { Route as VaultRouteImport } from './routes/vault'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as ServicesRouteImport } from './routes/services'
 import { Route as QuizRouteImport } from './routes/quiz'
-import { Route as PropertiesRouteImport } from './routes/properties'
 import { Route as InvestmentRouteImport } from './routes/investment'
 import { Route as InsightsRouteImport } from './routes/insights'
 import { Route as HeatmapRouteImport } from './routes/heatmap'
@@ -27,8 +26,11 @@ import { Route as CalculatorRouteImport } from './routes/calculator'
 import { Route as AcademyRouteImport } from './routes/academy'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as PropertiesIndexRouteImport } from './routes/properties.index'
 import { Route as PropertiesSlugRouteImport } from './routes/properties.$slug'
+import { Route as CollectionsCategoryRouteImport } from './routes/collections.$category'
 import { Route as AdminImportRouteImport } from './routes/admin.import'
+import { Route as ApiPublicDriveImportRouteImport } from './routes/api/public/drive-import'
 import { Route as ApiPublicBrochureRouteImport } from './routes/api/public/brochure'
 import { Route as ApiPublicDriveFileIdRouteImport } from './routes/api/public/drive.$fileId'
 
@@ -50,11 +52,6 @@ const ServicesRoute = ServicesRouteImport.update({
 const QuizRoute = QuizRouteImport.update({
   id: '/quiz',
   path: '/quiz',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const PropertiesRoute = PropertiesRouteImport.update({
-  id: '/properties',
-  path: '/properties',
   getParentRoute: () => rootRouteImport,
 } as any)
 const InvestmentRoute = InvestmentRouteImport.update({
@@ -122,14 +119,29 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PropertiesIndexRoute = PropertiesIndexRouteImport.update({
+  id: '/properties/',
+  path: '/properties/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PropertiesSlugRoute = PropertiesSlugRouteImport.update({
-  id: '/$slug',
-  path: '/$slug',
-  getParentRoute: () => PropertiesRoute,
+  id: '/properties/$slug',
+  path: '/properties/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CollectionsCategoryRoute = CollectionsCategoryRouteImport.update({
+  id: '/collections/$category',
+  path: '/collections/$category',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const AdminImportRoute = AdminImportRouteImport.update({
   id: '/admin/import',
   path: '/admin/import',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiPublicDriveImportRoute = ApiPublicDriveImportRouteImport.update({
+  id: '/api/public/drive-import',
+  path: '/api/public/drive-import',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiPublicBrochureRoute = ApiPublicBrochureRouteImport.update({
@@ -157,14 +169,16 @@ export interface FileRoutesByFullPath {
   '/heatmap': typeof HeatmapRoute
   '/insights': typeof InsightsRoute
   '/investment': typeof InvestmentRoute
-  '/properties': typeof PropertiesRouteWithChildren
   '/quiz': typeof QuizRoute
   '/services': typeof ServicesRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/vault': typeof VaultRoute
   '/admin/import': typeof AdminImportRoute
+  '/collections/$category': typeof CollectionsCategoryRoute
   '/properties/$slug': typeof PropertiesSlugRoute
+  '/properties/': typeof PropertiesIndexRoute
   '/api/public/brochure': typeof ApiPublicBrochureRoute
+  '/api/public/drive-import': typeof ApiPublicDriveImportRoute
   '/api/public/drive/$fileId': typeof ApiPublicDriveFileIdRoute
 }
 export interface FileRoutesByTo {
@@ -181,14 +195,16 @@ export interface FileRoutesByTo {
   '/heatmap': typeof HeatmapRoute
   '/insights': typeof InsightsRoute
   '/investment': typeof InvestmentRoute
-  '/properties': typeof PropertiesRouteWithChildren
   '/quiz': typeof QuizRoute
   '/services': typeof ServicesRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/vault': typeof VaultRoute
   '/admin/import': typeof AdminImportRoute
+  '/collections/$category': typeof CollectionsCategoryRoute
   '/properties/$slug': typeof PropertiesSlugRoute
+  '/properties': typeof PropertiesIndexRoute
   '/api/public/brochure': typeof ApiPublicBrochureRoute
+  '/api/public/drive-import': typeof ApiPublicDriveImportRoute
   '/api/public/drive/$fileId': typeof ApiPublicDriveFileIdRoute
 }
 export interface FileRoutesById {
@@ -206,14 +222,16 @@ export interface FileRoutesById {
   '/heatmap': typeof HeatmapRoute
   '/insights': typeof InsightsRoute
   '/investment': typeof InvestmentRoute
-  '/properties': typeof PropertiesRouteWithChildren
   '/quiz': typeof QuizRoute
   '/services': typeof ServicesRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/vault': typeof VaultRoute
   '/admin/import': typeof AdminImportRoute
+  '/collections/$category': typeof CollectionsCategoryRoute
   '/properties/$slug': typeof PropertiesSlugRoute
+  '/properties/': typeof PropertiesIndexRoute
   '/api/public/brochure': typeof ApiPublicBrochureRoute
+  '/api/public/drive-import': typeof ApiPublicDriveImportRoute
   '/api/public/drive/$fileId': typeof ApiPublicDriveFileIdRoute
 }
 export interface FileRouteTypes {
@@ -232,14 +250,16 @@ export interface FileRouteTypes {
     | '/heatmap'
     | '/insights'
     | '/investment'
-    | '/properties'
     | '/quiz'
     | '/services'
     | '/sitemap.xml'
     | '/vault'
     | '/admin/import'
+    | '/collections/$category'
     | '/properties/$slug'
+    | '/properties/'
     | '/api/public/brochure'
+    | '/api/public/drive-import'
     | '/api/public/drive/$fileId'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -256,14 +276,16 @@ export interface FileRouteTypes {
     | '/heatmap'
     | '/insights'
     | '/investment'
-    | '/properties'
     | '/quiz'
     | '/services'
     | '/sitemap.xml'
     | '/vault'
     | '/admin/import'
+    | '/collections/$category'
     | '/properties/$slug'
+    | '/properties'
     | '/api/public/brochure'
+    | '/api/public/drive-import'
     | '/api/public/drive/$fileId'
   id:
     | '__root__'
@@ -280,14 +302,16 @@ export interface FileRouteTypes {
     | '/heatmap'
     | '/insights'
     | '/investment'
-    | '/properties'
     | '/quiz'
     | '/services'
     | '/sitemap.xml'
     | '/vault'
     | '/admin/import'
+    | '/collections/$category'
     | '/properties/$slug'
+    | '/properties/'
     | '/api/public/brochure'
+    | '/api/public/drive-import'
     | '/api/public/drive/$fileId'
   fileRoutesById: FileRoutesById
 }
@@ -305,13 +329,16 @@ export interface RootRouteChildren {
   HeatmapRoute: typeof HeatmapRoute
   InsightsRoute: typeof InsightsRoute
   InvestmentRoute: typeof InvestmentRoute
-  PropertiesRoute: typeof PropertiesRouteWithChildren
   QuizRoute: typeof QuizRoute
   ServicesRoute: typeof ServicesRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   VaultRoute: typeof VaultRoute
   AdminImportRoute: typeof AdminImportRoute
+  CollectionsCategoryRoute: typeof CollectionsCategoryRoute
+  PropertiesSlugRoute: typeof PropertiesSlugRoute
+  PropertiesIndexRoute: typeof PropertiesIndexRoute
   ApiPublicBrochureRoute: typeof ApiPublicBrochureRoute
+  ApiPublicDriveImportRoute: typeof ApiPublicDriveImportRoute
   ApiPublicDriveFileIdRoute: typeof ApiPublicDriveFileIdRoute
 }
 
@@ -343,13 +370,6 @@ declare module '@tanstack/react-router' {
       path: '/quiz'
       fullPath: '/quiz'
       preLoaderRoute: typeof QuizRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/properties': {
-      id: '/properties'
-      path: '/properties'
-      fullPath: '/properties'
-      preLoaderRoute: typeof PropertiesRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/investment': {
@@ -443,18 +463,39 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/properties/': {
+      id: '/properties/'
+      path: '/properties'
+      fullPath: '/properties/'
+      preLoaderRoute: typeof PropertiesIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/properties/$slug': {
       id: '/properties/$slug'
-      path: '/$slug'
+      path: '/properties/$slug'
       fullPath: '/properties/$slug'
       preLoaderRoute: typeof PropertiesSlugRouteImport
-      parentRoute: typeof PropertiesRoute
+      parentRoute: typeof rootRouteImport
+    }
+    '/collections/$category': {
+      id: '/collections/$category'
+      path: '/collections/$category'
+      fullPath: '/collections/$category'
+      preLoaderRoute: typeof CollectionsCategoryRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/admin/import': {
       id: '/admin/import'
       path: '/admin/import'
       fullPath: '/admin/import'
       preLoaderRoute: typeof AdminImportRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/drive-import': {
+      id: '/api/public/drive-import'
+      path: '/api/public/drive-import'
+      fullPath: '/api/public/drive-import'
+      preLoaderRoute: typeof ApiPublicDriveImportRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/public/brochure': {
@@ -474,18 +515,6 @@ declare module '@tanstack/react-router' {
   }
 }
 
-interface PropertiesRouteChildren {
-  PropertiesSlugRoute: typeof PropertiesSlugRoute
-}
-
-const PropertiesRouteChildren: PropertiesRouteChildren = {
-  PropertiesSlugRoute: PropertiesSlugRoute,
-}
-
-const PropertiesRouteWithChildren = PropertiesRoute._addFileChildren(
-  PropertiesRouteChildren,
-)
-
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
@@ -500,25 +529,18 @@ const rootRouteChildren: RootRouteChildren = {
   HeatmapRoute: HeatmapRoute,
   InsightsRoute: InsightsRoute,
   InvestmentRoute: InvestmentRoute,
-  PropertiesRoute: PropertiesRouteWithChildren,
   QuizRoute: QuizRoute,
   ServicesRoute: ServicesRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   VaultRoute: VaultRoute,
   AdminImportRoute: AdminImportRoute,
+  CollectionsCategoryRoute: CollectionsCategoryRoute,
+  PropertiesSlugRoute: PropertiesSlugRoute,
+  PropertiesIndexRoute: PropertiesIndexRoute,
   ApiPublicBrochureRoute: ApiPublicBrochureRoute,
+  ApiPublicDriveImportRoute: ApiPublicDriveImportRoute,
   ApiPublicDriveFileIdRoute: ApiPublicDriveFileIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}

@@ -64,6 +64,7 @@ export type Database = {
           description: string | null
           developer: string | null
           drive_folder_id: string
+          featured: boolean
           hero_image_url: string | null
           id: string
           location: string | null
@@ -82,6 +83,7 @@ export type Database = {
           description?: string | null
           developer?: string | null
           drive_folder_id: string
+          featured?: boolean
           hero_image_url?: string | null
           id?: string
           location?: string | null
@@ -100,6 +102,7 @@ export type Database = {
           description?: string | null
           developer?: string | null
           drive_folder_id?: string
+          featured?: boolean
           hero_image_url?: string | null
           id?: string
           location?: string | null
@@ -150,7 +153,9 @@ export type Database = {
           drive_file_id: string
           id: string
           kind: string
+          media_group: string | null
           mime: string | null
+          name: string | null
           position: number
           property_id: string
           size_bytes: number | null
@@ -161,7 +166,9 @@ export type Database = {
           drive_file_id: string
           id?: string
           kind: string
+          media_group?: string | null
           mime?: string | null
+          name?: string | null
           position?: number
           property_id: string
           size_bytes?: number | null
@@ -172,7 +179,9 @@ export type Database = {
           drive_file_id?: string
           id?: string
           kind?: string
+          media_group?: string | null
           mime?: string | null
+          name?: string | null
           position?: number
           property_id?: string
           size_bytes?: number | null

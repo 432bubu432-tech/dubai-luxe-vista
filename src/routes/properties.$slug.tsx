@@ -2,6 +2,8 @@ import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { queryOptions, useSuspenseQuery, useMutation } from "@tanstack/react-query";
 import { useState } from "react";
 import { PageShell } from "@/components/PageShell";
+import { PropertyGallery } from "@/components/PropertyGallery";
+import { PropertyCard } from "@/components/PropertyCard";
 import { getProperty } from "@/lib/property-queries.functions";
 import { categoryLabel } from "@/lib/drive";
 import { captureLead } from "@/lib/contact";
@@ -136,30 +138,7 @@ function PropertyDetail() {
         </div>
       </section>
 
-      {/* Gallery */}
-      {images.length > 0 && (
-        <section className="px-6 md:px-10 py-20 border-b border-border">
-          <h2 className="text-3xl font-serif mb-10">Gallery</h2>
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-            {images.map((m) => (
-              <a
-                key={m.id}
-                href={`/api/public/drive/${m.drive_file_id}`}
-                target="_blank"
-                rel="noreferrer"
-                className="group aspect-[4/5] overflow-hidden bg-muted"
-              >
-                <img
-                  src={`/api/public/drive/${m.drive_file_id}`}
-                  alt={`${property.name} — image ${m.position + 1}`}
-                  loading="lazy"
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-                />
-              </a>
-            ))}
-          </div>
-        </section>
-      )}
+      <PropertyGallery items={images} propertyName={property.name} />
 
       {/* Floor plans */}
       {floorPlans.length > 0 && (
@@ -219,33 +198,12 @@ function PropertyDetail() {
         </section>
       )}
 
-      {/* Related */}
       {related.length > 0 && (
         <section className="px-6 md:px-10 py-20">
-          <h2 className="text-3xl font-serif mb-10">Related Properties</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {related.map((r) => (
-              <Link
-                key={r.slug}
-                to="/properties/$slug"
-                params={{ slug: r.slug }}
-                className="group block"
-              >
-                {r.hero_image_url && (
-                  <div className="aspect-[4/5] overflow-hidden bg-muted">
-                    <img
-                      src={r.hero_image_url}
-                      alt={r.name}
-                      loading="lazy"
-                      className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700"
-                    />
-                  </div>
-                )}
-                <p className="mt-4 font-mono text-[10px] uppercase tracking-[0.25em] text-accent">
-                  {categoryLabel(r.category)}
-                </p>
-                <h3 className="mt-2 font-serif text-xl">{r.name}</h3>
-              </Link>
+          <h2 className="text-3xl font-serif mb-10">Related Residences</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+            {related.map((r, i) => (
+              <PropertyCard key={r.slug} property={r} index={i} />
             ))}
           </div>
         </section>
