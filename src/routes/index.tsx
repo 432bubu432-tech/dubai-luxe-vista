@@ -1,14 +1,22 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
+import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 import { PageShell } from "@/components/PageShell";
+import { HeroCarousel } from "@/components/HeroCarousel";
+import { PropertyCard } from "@/components/PropertyCard";
 import { captureLead, whatsappUrl, buildLeadMessage } from "@/lib/contact";
-import heroPalm from "@/assets/hero-palm.jpg";
-import waterfront from "@/assets/collection-waterfront.jpg";
-import skyline from "@/assets/collection-skyline.jpg";
-import branded from "@/assets/collection-branded.jpg";
-import yieldImg from "@/assets/collection-yield.jpg";
-import propSerene from "@/assets/property-serene.jpg";
-import propNoir from "@/assets/property-noir.jpg";
+import { listFeatured, listProperties } from "@/lib/property-queries.functions";
+import { CATEGORIES } from "@/lib/drive";
+
+const featuredQuery = queryOptions({
+  queryKey: ["properties", "featured"],
+  queryFn: () => listFeatured(),
+});
+
+const allQuery = queryOptions({
+  queryKey: ["properties", "all"],
+  queryFn: () => listProperties(),
+});
 
 const faqs = [
   { q: "Can Americans buy property in Dubai?", a: "Yes. U.S. citizens and entities may acquire freehold property in designated zones across Dubai with no residency requirement, full ownership rights, and clear repatriation of capital." },
@@ -19,6 +27,12 @@ const faqs = [
 ];
 
 export const Route = createFileRoute("/")({
+  loader: async ({ context }) => {
+    await Promise.all([
+      context.queryClient.ensureQueryData(featuredQuery),
+      context.queryClient.ensureQueryData(allQuery),
+    ]);
+  },
   head: () => ({
     meta: [
       { title: "Aureus Capital — Dubai Luxury Real Estate Investment" },
@@ -68,33 +82,6 @@ export const Route = createFileRoute("/")({
   component: HomePage,
 });
 
-const collections = [
-  {
-    title: "The Waterfront",
-    sub: "Private Island Living",
-    body: "Beachfront villas across Palm Jumeirah and exclusive coastal districts.",
-    img: waterfront,
-  },
-  {
-    title: "The Skyline",
-    sub: "Urban Apex Portfolio",
-    body: "Ultra-luxury penthouses in Downtown Dubai and Marina towers.",
-    img: skyline,
-  },
-  {
-    title: "Branded Homes",
-    sub: "Hotel Heritage Assets",
-    body: "Residences in partnership with global luxury and hospitality brands.",
-    img: branded,
-  },
-  {
-    title: "Yield Portfolio",
-    sub: "Performance Driven",
-    body: "Pre-vetted high-return investment properties with strong rental metrics.",
-    img: yieldImg,
-  },
-];
-
 const valueStack = [
   { n: "01", title: "USD Stability", body: "The AED-USD peg anchors capital to the world's primary reserve currency." },
   { n: "02", title: "Golden Residency", body: "Investment pathways granting 10-year renewable residency for your household." },
@@ -111,31 +98,16 @@ const zones = [
   { name: "Business Bay", tag: "Urban income corridor" },
 ];
 
-const properties = [
-  {
-    name: "The Serene Shore Villa",
-    location: "Palm Jumeirah · Frond G",
-    price: "$14,200,000",
-    yield: "Yield 7.2%",
-    liquidity: "Liquidity A+",
-    strategy: "Appreciation",
-    body: "Sunset-aspect villa on the exclusive Frond G of Palm Jumeirah with bespoke Italian interiors and a private beach.",
-    img: propSerene,
-  },
-  {
-    name: "Penthouse Noir",
-    location: "Downtown Dubai · Sky Residence",
-    price: "$8,500,000",
-    yield: "Yield 9.1%",
-    liquidity: "Liquidity S",
-    strategy: "High-Yield",
-    body: "Dual-aspect sky residence in Downtown Dubai with a private lap pool and direct Burj Khalifa vistas.",
-    img: propNoir,
-  },
-];
-
 function HomePage() {
   const [leadSent, setLeadSent] = useState(false);
+  const { data: featured } = useSuspenseQuery(featuredQuery);
+  const { data: all } = useSuspenseQuery(allQuery);
+
+  const covers = CATEGORIES.map((c) => ({
+    ...c,
+    count: all.filter((p) => p.category === c.key).length,
+    image: all.find((p) => p.category === c.key && p.hero_image_url)?.hero_image_url ?? null,
+  }));
 
   function onLeadSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -149,59 +121,7 @@ function HomePage() {
 
   return (
     <PageShell>
-      {/* HERO */}
-      <section className="relative -mt-20 h-screen flex items-center justify-center overflow-hidden">
-        <div className="absolute inset-0 z-0 animate-vault">
-          <img
-            src={heroPalm}
-            alt="Aerial view of Palm Jumeirah at golden hour"
-            width={1920}
-            height={1080}
-            className="w-full h-full object-cover"
-          />
-          <div className="absolute inset-0 bg-gradient-to-b from-background/70 via-background/20 to-background" />
-        </div>
-
-        <div className="relative z-10 text-center px-6 max-w-4xl">
-          <span className="block font-mono text-accent text-[10px] uppercase tracking-[0.4em] mb-6 animate-reveal [animation-delay:200ms]">
-            A Private Portfolio
-          </span>
-          <h1 className="text-5xl md:text-7xl font-serif text-balance leading-[1.05] mb-10 animate-reveal [animation-delay:400ms]">
-            Invest in Dubai's Most Exclusive{" "}
-            <span className="italic">Luxury Real Estate</span> Opportunities
-          </h1>
-          <p className="text-base md:text-lg text-foreground/70 max-w-2xl mx-auto mb-10 leading-relaxed animate-reveal [animation-delay:500ms]">
-            A curated portfolio of waterfront villas, branded residences, and high-yield
-            investment properties for global investors seeking tax-efficient wealth and
-            world-class living.
-          </p>
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 animate-reveal [animation-delay:600ms]">
-            <Link
-              to="/concierge"
-              className="px-8 py-4 bg-accent text-accent-foreground text-xs uppercase tracking-[0.2em] font-medium hover:brightness-110 transition-all"
-            >
-              Request Private Access
-            </Link>
-            <Link
-              to="/properties"
-              className="px-8 py-4 bg-foreground/5 backdrop-blur-md border border-foreground/20 text-foreground text-xs uppercase tracking-[0.2em] font-medium hover:bg-foreground/15 transition-all"
-            >
-              Explore Curated Properties
-            </Link>
-          </div>
-        </div>
-
-        <div className="absolute bottom-12 left-6 md:left-12 hidden md:flex gap-12 border-l border-accent/40 pl-8 z-10">
-          <div className="animate-reveal [animation-delay:800ms]">
-            <p className="text-[10px] font-mono text-muted-foreground uppercase tracking-[0.25em]">Market Performance</p>
-            <p className="text-xl font-serif">6–12% Net Yields</p>
-          </div>
-          <div className="animate-reveal [animation-delay:900ms]">
-            <p className="text-[10px] font-mono text-muted-foreground uppercase tracking-[0.25em]">Fiscal Structure</p>
-            <p className="text-xl font-serif italic">0% Property Tax</p>
-          </div>
-        </div>
-      </section>
+      <HeroCarousel slides={featured} />
 
       {/* TRUST */}
       <section className="border-y border-border py-6 px-6 md:px-10">
@@ -232,9 +152,9 @@ function HomePage() {
       <section className="py-28">
         <div className="px-6 md:px-10 mb-12 flex items-end justify-between max-w-screen-2xl mx-auto">
           <div>
-            <h2 className="text-3xl md:text-4xl font-serif italic">Curated Collections</h2>
+            <h2 className="text-3xl md:text-4xl font-serif italic">The Five Collections</h2>
             <p className="text-muted-foreground mt-2 max-w-md">
-              Precision-selected assets categorized by investment profile and lifestyle.
+              Every asset in our live library, organised by the way capital actually behaves.
             </p>
           </div>
           <Link
@@ -245,24 +165,29 @@ function HomePage() {
           </Link>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-px bg-border border-y border-border">
-          {collections.map((c) => (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-px bg-border border-y border-border">
+          {covers.map((c) => (
             <Link
-              key={c.title}
-              to="/properties"
+              key={c.key}
+              to="/collections/$category"
+              params={{ category: c.key }}
               className="group relative aspect-[3/4] bg-background overflow-hidden block"
             >
-              <img
-                src={c.img}
-                alt={c.title}
-                loading="lazy"
-                className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700 group-hover:scale-105"
-              />
+              {c.image && (
+                <img
+                  src={c.image}
+                  alt={`${c.label} — Dubai property collection`}
+                  loading="lazy"
+                  className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700 group-hover:scale-105"
+                />
+              )}
               <div className="absolute inset-0 bg-gradient-to-t from-background via-background/30 to-transparent p-8 flex flex-col justify-end">
-                <p className="text-[10px] uppercase tracking-[0.25em] text-accent mb-2">{c.sub}</p>
-                <h3 className="text-2xl font-serif">{c.title}</h3>
+                <p className="text-[10px] uppercase tracking-[0.25em] text-accent mb-2">
+                  {c.count} residences
+                </p>
+                <h3 className="text-2xl font-serif leading-tight">{c.label}</h3>
                 <p className="text-sm text-foreground/60 mt-3 max-w-[28ch] opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-                  {c.body}
+                  {c.tagline}
                 </p>
               </div>
             </Link>
@@ -270,78 +195,29 @@ function HomePage() {
         </div>
       </section>
 
-      {/* INTELLIGENCE PROPERTIES */}
-      <section className="py-28 px-6 md:px-10 bg-foreground/[0.02]">
+      {/* FEATURED RESIDENCES */}
+      <section className="py-28 px-6 md:px-10 bg-foreground/[0.02] border-t border-border">
         <div className="max-w-screen-2xl mx-auto">
-          <div className="flex flex-col lg:flex-row gap-16">
-            <div className="w-full lg:w-1/3 lg:sticky lg:top-32 h-fit">
-              <span className="font-mono text-[10px] text-accent uppercase tracking-[0.4em]">Intelligence Engine</span>
-              <h2 className="text-3xl md:text-4xl font-serif mt-4 mb-6">
-                Market <span className="italic">Intelligence</span>
+          <div className="flex flex-wrap items-end justify-between gap-6 mb-14">
+            <div>
+              <span className="font-mono text-[10px] text-accent uppercase tracking-[0.4em]">
+                Featured Residences
+              </span>
+              <h2 className="text-3xl md:text-4xl font-serif mt-4 max-w-2xl">
+                Currently held on the <span className="italic">private desk</span>
               </h2>
-              <p className="text-muted-foreground text-sm leading-relaxed mb-8">
-                Every asset is vetted through a 42-point analysis: historical liquidity,
-                neighborhood gentrification curves and net operational yield projections.
-              </p>
-              <div className="space-y-4 border-t border-border pt-8">
-                <Row label="Average ROI (Premium)" value="8.4%" />
-                <Row label="Supply Scarcity Score" value="High" />
-                <Row label="Demand Liquidity" value="A+" />
-              </div>
-              <Link
-                to="/investment"
-                className="inline-block mt-10 text-[10px] uppercase tracking-[0.25em] text-accent border-b border-accent/40 pb-1"
-              >
-                Get Personalized Analysis
-              </Link>
             </div>
-
-            <div className="w-full lg:w-2/3 space-y-24">
-              {properties.map((p) => (
-                <article key={p.name} className="group flex flex-col md:flex-row gap-10">
-                  <div className="w-full md:w-1/2 aspect-[4/5] overflow-hidden">
-                    <img
-                      src={p.img}
-                      alt={p.name}
-                      loading="lazy"
-                      className="w-full h-full object-cover hover:scale-105 transition-transform duration-1000"
-                    />
-                  </div>
-                  <div className="w-full md:w-1/2 flex flex-col justify-center">
-                    <div className="flex flex-wrap gap-2 mb-6">
-                      <span className="px-3 py-1 bg-accent/10 border border-accent/30 text-[9px] text-accent uppercase font-mono tracking-tight">
-                        {p.yield}
-                      </span>
-                      <span className="px-3 py-1 bg-foreground/5 border border-border text-[9px] text-muted-foreground uppercase font-mono tracking-tight">
-                        {p.liquidity}
-                      </span>
-                      <span className="px-3 py-1 bg-foreground/5 border border-border text-[9px] text-muted-foreground uppercase font-mono tracking-tight">
-                        {p.strategy}
-                      </span>
-                    </div>
-                    <h3 className="text-3xl font-serif mb-2">{p.name}</h3>
-                    <p className="text-sm text-muted-foreground mb-6">{p.location}</p>
-                    <p className="text-sm text-foreground/70 leading-relaxed mb-8">{p.body}</p>
-                    <div className="grid grid-cols-2 gap-8 mb-8 pb-8 border-b border-border">
-                      <div>
-                        <p className="text-[10px] uppercase tracking-[0.25em] text-muted-foreground">Investment</p>
-                        <p className="text-lg font-serif mt-1">{p.price}</p>
-                      </div>
-                      <div>
-                        <p className="text-[10px] uppercase tracking-[0.25em] text-muted-foreground">Strategy</p>
-                        <p className="text-lg font-serif italic mt-1">{p.strategy}</p>
-                      </div>
-                    </div>
-                    <Link
-                      to="/concierge"
-                      className="w-fit text-[10px] uppercase tracking-[0.25em] font-medium border-b border-accent pb-1 hover:text-accent transition-colors"
-                    >
-                      Request Full Financial Breakdown
-                    </Link>
-                  </div>
-                </article>
-              ))}
-            </div>
+            <Link
+              to="/properties"
+              className="text-[10px] uppercase tracking-[0.25em] text-accent border-b border-accent/40 pb-1"
+            >
+              All {all.length} residences
+            </Link>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+            {featured.map((p, i) => (
+              <PropertyCard key={p.slug} property={p} index={i} />
+            ))}
           </div>
         </div>
       </section>
