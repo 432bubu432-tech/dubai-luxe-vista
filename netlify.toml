@@ -1,0 +1,23 @@
+[build]
+  command = "npm ci && npm run build"
+  publish = "dist"
+  functions = "netlify/functions"
+
+[[redirects]]
+  from = "/api/drive/:fileId"
+  to = "/.netlify/functions/drive-file?fileId=:fileId"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/api/public/drive/:fileId"
+  to = "/.netlify/functions/drive-file?fileId=:fileId"
+  status = 200
+  force = true
+
+# SPA fallback (keeps your existing rewrite)
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+  force = false
