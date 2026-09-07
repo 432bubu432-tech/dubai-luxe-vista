@@ -29,10 +29,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as PropertiesIndexRouteImport } from './routes/properties.index'
 import { Route as PropertiesSlugRouteImport } from './routes/properties.$slug'
 import { Route as CollectionsCategoryRouteImport } from './routes/collections.$category'
-import { Route as AdminImportRouteImport } from './routes/admin.import'
-import { Route as ApiPublicDriveImportRouteImport } from './routes/api/public/drive-import'
 import { Route as ApiPublicBrochureRouteImport } from './routes/api/public/brochure'
-import { Route as ApiPublicDriveFileIdRouteImport } from './routes/api/public/drive.$fileId'
 
 const VaultRoute = VaultRouteImport.update({
   id: '/vault',
@@ -134,24 +131,9 @@ const CollectionsCategoryRoute = CollectionsCategoryRouteImport.update({
   path: '/collections/$category',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AdminImportRoute = AdminImportRouteImport.update({
-  id: '/admin/import',
-  path: '/admin/import',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ApiPublicDriveImportRoute = ApiPublicDriveImportRouteImport.update({
-  id: '/api/public/drive-import',
-  path: '/api/public/drive-import',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const ApiPublicBrochureRoute = ApiPublicBrochureRouteImport.update({
   id: '/api/public/brochure',
   path: '/api/public/brochure',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ApiPublicDriveFileIdRoute = ApiPublicDriveFileIdRouteImport.update({
-  id: '/api/public/drive/$fileId',
-  path: '/api/public/drive/$fileId',
   getParentRoute: () => rootRouteImport,
 } as any)
 
@@ -173,13 +155,10 @@ export interface FileRoutesByFullPath {
   '/services': typeof ServicesRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/vault': typeof VaultRoute
-  '/admin/import': typeof AdminImportRoute
   '/collections/$category': typeof CollectionsCategoryRoute
   '/properties/$slug': typeof PropertiesSlugRoute
   '/properties/': typeof PropertiesIndexRoute
   '/api/public/brochure': typeof ApiPublicBrochureRoute
-  '/api/public/drive-import': typeof ApiPublicDriveImportRoute
-  '/api/public/drive/$fileId': typeof ApiPublicDriveFileIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -199,13 +178,10 @@ export interface FileRoutesByTo {
   '/services': typeof ServicesRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/vault': typeof VaultRoute
-  '/admin/import': typeof AdminImportRoute
   '/collections/$category': typeof CollectionsCategoryRoute
   '/properties/$slug': typeof PropertiesSlugRoute
   '/properties': typeof PropertiesIndexRoute
   '/api/public/brochure': typeof ApiPublicBrochureRoute
-  '/api/public/drive-import': typeof ApiPublicDriveImportRoute
-  '/api/public/drive/$fileId': typeof ApiPublicDriveFileIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -226,13 +202,10 @@ export interface FileRoutesById {
   '/services': typeof ServicesRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/vault': typeof VaultRoute
-  '/admin/import': typeof AdminImportRoute
   '/collections/$category': typeof CollectionsCategoryRoute
   '/properties/$slug': typeof PropertiesSlugRoute
   '/properties/': typeof PropertiesIndexRoute
   '/api/public/brochure': typeof ApiPublicBrochureRoute
-  '/api/public/drive-import': typeof ApiPublicDriveImportRoute
-  '/api/public/drive/$fileId': typeof ApiPublicDriveFileIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -254,13 +227,10 @@ export interface FileRouteTypes {
     | '/services'
     | '/sitemap.xml'
     | '/vault'
-    | '/admin/import'
     | '/collections/$category'
     | '/properties/$slug'
     | '/properties/'
     | '/api/public/brochure'
-    | '/api/public/drive-import'
-    | '/api/public/drive/$fileId'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -280,13 +250,10 @@ export interface FileRouteTypes {
     | '/services'
     | '/sitemap.xml'
     | '/vault'
-    | '/admin/import'
     | '/collections/$category'
     | '/properties/$slug'
     | '/properties'
     | '/api/public/brochure'
-    | '/api/public/drive-import'
-    | '/api/public/drive/$fileId'
   id:
     | '__root__'
     | '/'
@@ -306,13 +273,10 @@ export interface FileRouteTypes {
     | '/services'
     | '/sitemap.xml'
     | '/vault'
-    | '/admin/import'
     | '/collections/$category'
     | '/properties/$slug'
     | '/properties/'
     | '/api/public/brochure'
-    | '/api/public/drive-import'
-    | '/api/public/drive/$fileId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -333,13 +297,10 @@ export interface RootRouteChildren {
   ServicesRoute: typeof ServicesRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   VaultRoute: typeof VaultRoute
-  AdminImportRoute: typeof AdminImportRoute
   CollectionsCategoryRoute: typeof CollectionsCategoryRoute
   PropertiesSlugRoute: typeof PropertiesSlugRoute
   PropertiesIndexRoute: typeof PropertiesIndexRoute
   ApiPublicBrochureRoute: typeof ApiPublicBrochureRoute
-  ApiPublicDriveImportRoute: typeof ApiPublicDriveImportRoute
-  ApiPublicDriveFileIdRoute: typeof ApiPublicDriveFileIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -484,32 +445,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CollectionsCategoryRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/admin/import': {
-      id: '/admin/import'
-      path: '/admin/import'
-      fullPath: '/admin/import'
-      preLoaderRoute: typeof AdminImportRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/public/drive-import': {
-      id: '/api/public/drive-import'
-      path: '/api/public/drive-import'
-      fullPath: '/api/public/drive-import'
-      preLoaderRoute: typeof ApiPublicDriveImportRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/api/public/brochure': {
       id: '/api/public/brochure'
       path: '/api/public/brochure'
       fullPath: '/api/public/brochure'
       preLoaderRoute: typeof ApiPublicBrochureRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/public/drive/$fileId': {
-      id: '/api/public/drive/$fileId'
-      path: '/api/public/drive/$fileId'
-      fullPath: '/api/public/drive/$fileId'
-      preLoaderRoute: typeof ApiPublicDriveFileIdRouteImport
       parentRoute: typeof rootRouteImport
     }
   }
@@ -533,13 +473,10 @@ const rootRouteChildren: RootRouteChildren = {
   ServicesRoute: ServicesRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   VaultRoute: VaultRoute,
-  AdminImportRoute: AdminImportRoute,
   CollectionsCategoryRoute: CollectionsCategoryRoute,
   PropertiesSlugRoute: PropertiesSlugRoute,
   PropertiesIndexRoute: PropertiesIndexRoute,
   ApiPublicBrochureRoute: ApiPublicBrochureRoute,
-  ApiPublicDriveImportRoute: ApiPublicDriveImportRoute,
-  ApiPublicDriveFileIdRoute: ApiPublicDriveFileIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
