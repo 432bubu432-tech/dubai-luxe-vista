@@ -1,96 +1,81 @@
-import { createServerFn } from "@tanstack/react-start";
-import { createClient } from "@supabase/supabase-js";
-import { z } from "zod";
-import type { Database } from "@/integrations/supabase/types";
+// Reads the property library that was imported once from Google Drive into
+// src/data/properties.ts. No runtime Drive or database calls are involved.
+import { PROPERTIES, type PropertyRecord, type PropertyMedia } from "@/data/properties";
 
-function pub() {
-  const key = process.env["SUPABASE_PUBLISHABLE_KEY"]!;
-  return createClient<Database>(process.env["SUPABASE_URL"]!, key, {
-    auth: { persistSession: false, autoRefreshToken: false, storage: undefined },
-    global: {
-      fetch: (input, init) => {
-        const h = new Headers(init?.headers);
-        if (key.startsWith("sb_") && h.get("Authorization") === `Bearer ${key}`) h.delete("Authorization");
-        h.set("apikey", key);
-        return fetch(input, { ...init, headers: h });
-      },
-    },
-  });
+export type PropertyCard = {
+  id: string;
+  slug: string;
+  name: string;
+  category: string;
+  hero_image_url: string | null;
+  price: string | null;
+  location: string | null;
+  developer: string | null;
+  bedrooms: string | null;
+  featured: boolean;
+};
+
+const card = (p: PropertyRecord): PropertyCard => ({
+  id: p.slug,
+  slug: p.slug,
+  name: p.name,
+  category: p.category,
+  hero_image_url: p.hero_image_url,
+  price: p.price,
+  location: p.location,
+  developer: p.developer,
+  bedrooms: p.bedrooms,
+  featured: p.featured,
+});
+
+const byName = (a: PropertyRecord, b: PropertyRecord) => a.name.localeCompare(b.name);
+const featuredFirst = (a: PropertyRecord, b: PropertyRecord) =>
+  Number(b.featured) - Number(a.featured) || byName(a, b);
+
+export async function listProperties(): Promise<PropertyCard[]> {
+  return [...PROPERTIES].sort(featuredFirst).map(card);
 }
 
-const CARD_FIELDS =
-  "id, slug, name, category, hero_image_url, price, location, developer, bedrooms, featured";
+export async function listFeatured(): Promise<PropertyCard[]> {
+  const flagged = PROPERTIES.filter((p) => p.featured && p.hero_image_url);
+  const rich = PROPERTIES.filter((p) => !p.featured && p.hero_image_url)
+    .slice()
+    .sort((a, b) => b.media.length - a.media.length);
+  return [...flagged, ...rich].slice(0, 6).map(card);
+}
 
-export const listProperties = createServerFn({ method: "GET" }).handler(async () => {
-  const { data, error } = await pub()
-    .from("properties")
-    .select(CARD_FIELDS)
-    .eq("published", true)
-    .order("featured", { ascending: false })
-    .order("name");
-  if (error) throw error;
-  return data ?? [];
-});
+export async function listByCategory({
+  data,
+}: {
+  data: { category: string };
+}): Promise<PropertyCard[]> {
+  return PROPERTIES.filter((p) => p.category === data.category)
+    .sort(featuredFirst)
+    .map(card);
+}
 
-export const listFeatured = createServerFn({ method: "GET" }).handler(async () => {
-  const client = pub();
-  const { data: featured } = await client
-    .from("properties")
-    .select(CARD_FIELDS)
-    .eq("published", true)
-    .eq("featured", true)
-    .limit(6);
-  if (featured && featured.length >= 3) return featured;
-  const { data: fallback, error } = await client
-    .from("properties")
-    .select(CARD_FIELDS)
-    .eq("published", true)
-    .not("hero_image_url", "is", null)
-    .order("name")
-    .limit(6);
-  if (error) throw error;
-  return [...(featured ?? []), ...(fallback ?? [])]
-    .filter((p, i, arr) => arr.findIndex((x) => x.id === p.id) === i)
-    .slice(0, 6);
-});
+export type PropertyDetail = {
+  property: PropertyCard & { description: string };
+  media: PropertyMedia[];
+  related: PropertyCard[];
+};
 
-export const listByCategory = createServerFn({ method: "GET" })
-  .inputValidator((input: unknown) => z.object({ category: z.string() }).parse(input))
-  .handler(async ({ data }) => {
-    const { data: rows, error } = await pub()
-      .from("properties")
-      .select(CARD_FIELDS)
-      .eq("published", true)
-      .eq("category", data.category)
-      .order("featured", { ascending: false })
-      .order("name");
-    if (error) throw error;
-    return rows ?? [];
-  });
-
-export const getProperty = createServerFn({ method: "GET" })
-  .inputValidator((input: unknown) => z.object({ slug: z.string() }).parse(input))
-  .handler(async ({ data }) => {
-    const client = pub();
-    const { data: prop, error } = await client
-      .from("properties")
-      .select("*")
-      .eq("slug", data.slug)
-      .eq("published", true)
-      .maybeSingle();
-    if (error) throw error;
-    if (!prop) return null;
-    const { data: media } = await client
-      .from("property_media")
-      .select("id, drive_file_id, kind, mime, position, name, media_group")
-      .eq("property_id", prop.id)
-      .order("position");
-    const { data: related } = await client
-      .from("properties")
-      .select(CARD_FIELDS)
-      .eq("category", prop.category)
-      .neq("id", prop.id)
-      .eq("published", true)
-      .limit(4);
-    return { property: prop, media: media ?? [], related: related ?? [] };
-  });
+export async function getProperty({
+  data,
+}: {
+  data: { slug: string };
+}): Promise<PropertyDetail | null> {
+  const found = PROPERTIES.find((p) => p.slug === data.slug);
+  if (!found) return null;
+  const related = PROPERTIES.filter(
+    (p) => p.category === found.category && p.slug !== found.slug && p.hero_image_url,
+  )
+    .sort(featuredFirst)
+    .slice(0, 4)
+    .map(card);
+  return {
+    property: { ...card(found), description: found.description },
+    media: found.media,
+    related,
+  };
+}

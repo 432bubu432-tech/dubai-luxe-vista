@@ -1,8 +1,9 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { z } from "zod";
+import { PROPERTIES } from "@/data/properties";
 
 const LeadSchema = z.object({
-  propertyId: z.string().uuid(),
+  propertyId: z.string().min(1),
   driveFileId: z.string().min(1),
   name: z.string().min(1).max(120),
   email: z.string().email().max(200),
@@ -17,45 +18,35 @@ export const Route = createFileRoute("/api/public/brochure")({
         if (!parsed.success) return new Response("Invalid input", { status: 400 });
         const body = parsed.data;
 
-        const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-        // Verify the media belongs to the property and is a brochure/floor_plan pdf.
-        const { data: media } = await supabaseAdmin
-          .from("property_media")
-          .select("id, kind, mime")
-          .eq("property_id", body.propertyId)
-          .eq("drive_file_id", body.driveFileId)
-          .maybeSingle();
-        if (!media || (media.kind !== "brochure" && media.kind !== "floor_plan")) {
+        // The document must belong to the property and be a downloadable dossier.
+        const property = PROPERTIES.find((p) => p.slug === body.propertyId);
+        const media = property?.media.find((m) => m.id === body.driveFileId);
+        if (!property || !media || (media.kind !== "brochure" && media.kind !== "floor_plan")) {
           return new Response("Not found", { status: 404 });
         }
 
-        await supabaseAdmin.from("brochure_leads").insert({
-          property_id: body.propertyId,
-          name: body.name,
-          email: body.email,
-          phone: body.phone ?? null,
-          source: "brochure",
-        });
-        await supabaseAdmin.from("property_events").insert({
-          property_id: body.propertyId,
-          event: "brochure_download",
-          meta: { driveFileId: body.driveFileId },
-        });
+        try {
+          const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+          await supabaseAdmin.from("brochure_leads").insert({
+            property_slug: property.slug,
+            property_name: property.name,
+            document_name: media.name,
+            name: body.name,
+            email: body.email,
+            phone: body.phone ?? null,
+            source: "brochure",
+          });
+        } catch (err) {
+          // A lead-storage hiccup must never block the client's download.
+          console.error("brochure lead insert failed", err);
+        }
 
-        const key = process.env.LOVABLE_API_KEY;
-        const connKey = process.env.GOOGLE_DRIVE_API_KEY;
-        const url = `https://connector-gateway.lovable.dev/google_drive/drive/v3/files/${encodeURIComponent(body.driveFileId)}?alt=media`;
-        const res = await fetch(url, {
-          headers: {
-            Authorization: `Bearer ${key}`,
-            "X-Connection-Api-Key": connKey!,
-          },
-        });
-        if (!res.ok) return new Response("Failed to fetch brochure", { status: 502 });
+        const fileRes = await fetch(new URL(media.url, request.url).toString());
+        if (!fileRes.ok) return new Response("Failed to fetch brochure", { status: 502 });
         const headers = new Headers();
-        headers.set("content-type", media.mime ?? "application/pdf");
+        headers.set("content-type", media.mime || "application/pdf");
         headers.set("content-disposition", `attachment; filename="brochure.pdf"`);
-        return new Response(res.body, { status: 200, headers });
+        return new Response(fileRes.body, { status: 200, headers });
       },
     },
   },
