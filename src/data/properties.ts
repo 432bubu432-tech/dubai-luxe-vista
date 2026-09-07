@@ -32,6 +32,64 @@ export type PropertyRecord = {
 
 export const PROPERTIES: PropertyRecord[] = [
  {
+  "slug": "lunaya-by-zaya",
+  "name": "Lunaya",
+  "category": "signature",
+  "developer": "Zaya",
+  "location": "Dubai, UAE",
+  "featured": true,
+  "hero_image_url": "/__l5e/assets-v1/950a7264-567f-4998-90d3-6885da1f328d/Lunaya-photo-4.webp",
+  "description": "Lunaya by Zaya sits within our Signature Villas & Mansions in Dubai, UAE. Aureus Capital holds the complete media set — architectural imagery, floor plates and the developer brochure — and advises privately on unit selection, payment structure and exit strategy before public release pricing moves.",
+  "price": null,
+  "bedrooms": null,
+  "media": [
+   {
+    "id": "18Tw6wOh0IkCPhvnSV9lNiY0SeWoXFC7V",
+    "kind": "image",
+    "name": "Lunaya photo 2.webp",
+    "media_group": "Exterior",
+    "url": "/__l5e/assets-v1/62c9e139-88ee-45e4-92ec-f00264821dfd/Lunaya-photo-2.webp",
+    "mime": "image/webp",
+    "position": 0,
+    "width": 1750,
+    "height": 1627
+   },
+   {
+    "id": "1z6NcU6GaI0m1tBMkTFsJo0rONZEe6Oh7",
+    "kind": "image",
+    "name": "Lunaya photo 3.webp",
+    "media_group": "Exterior",
+    "url": "/__l5e/assets-v1/a784c0a6-ec29-4ef9-af80-caba1afc805d/Lunaya-photo-3.webp",
+    "mime": "image/webp",
+    "position": 1,
+    "width": 1755,
+    "height": 1627
+   },
+   {
+    "id": "1jtEpXS44c3QMLZDBCF9IkDyce2OCqtrz",
+    "kind": "image",
+    "name": "Lunaya photo 4.webp",
+    "media_group": "Exterior",
+    "url": "/__l5e/assets-v1/950a7264-567f-4998-90d3-6885da1f328d/Lunaya-photo-4.webp",
+    "mime": "image/webp",
+    "position": 2,
+    "width": 1750,
+    "height": 1917
+   },
+   {
+    "id": "10XeLSkPR2gcyC0xQXkp9FTA665YluxuL",
+    "kind": "image",
+    "name": "Lunaya photo1.webp",
+    "media_group": "Exterior",
+    "url": "/__l5e/assets-v1/57f13c05-cb4d-433b-83af-d4ebb5de2291/Lunaya-photo1.webp",
+    "mime": "image/webp",
+    "position": 3,
+    "width": 1920,
+    "height": 1313
+   }
+  ]
+ },
+ {
   "slug": "akala-residences-by-arada",
   "name": "Akala Residences",
   "category": "skyline",
@@ -922,64 +980,6 @@ export const PROPERTIES: PropertyRecord[] = [
   "price": null,
   "bedrooms": null,
   "media": []
- },
- {
-  "slug": "lunaya-by-zaya",
-  "name": "Lunaya",
-  "category": "signature",
-  "developer": "Zaya",
-  "location": "Dubai, UAE",
-  "featured": false,
-  "hero_image_url": "/__l5e/assets-v1/950a7264-567f-4998-90d3-6885da1f328d/Lunaya-photo-4.webp",
-  "description": "Lunaya by Zaya sits within our Signature Villas & Mansions in Dubai, UAE. Aureus Capital holds the complete media set — architectural imagery, floor plates and the developer brochure — and advises privately on unit selection, payment structure and exit strategy before public release pricing moves.",
-  "price": null,
-  "bedrooms": null,
-  "media": [
-   {
-    "id": "18Tw6wOh0IkCPhvnSV9lNiY0SeWoXFC7V",
-    "kind": "image",
-    "name": "Lunaya photo 2.webp",
-    "media_group": "Exterior",
-    "url": "/__l5e/assets-v1/62c9e139-88ee-45e4-92ec-f00264821dfd/Lunaya-photo-2.webp",
-    "mime": "image/webp",
-    "position": 0,
-    "width": 1750,
-    "height": 1627
-   },
-   {
-    "id": "1z6NcU6GaI0m1tBMkTFsJo0rONZEe6Oh7",
-    "kind": "image",
-    "name": "Lunaya photo 3.webp",
-    "media_group": "Exterior",
-    "url": "/__l5e/assets-v1/a784c0a6-ec29-4ef9-af80-caba1afc805d/Lunaya-photo-3.webp",
-    "mime": "image/webp",
-    "position": 1,
-    "width": 1755,
-    "height": 1627
-   },
-   {
-    "id": "1jtEpXS44c3QMLZDBCF9IkDyce2OCqtrz",
-    "kind": "image",
-    "name": "Lunaya photo 4.webp",
-    "media_group": "Exterior",
-    "url": "/__l5e/assets-v1/950a7264-567f-4998-90d3-6885da1f328d/Lunaya-photo-4.webp",
-    "mime": "image/webp",
-    "position": 2,
-    "width": 1750,
-    "height": 1917
-   },
-   {
-    "id": "10XeLSkPR2gcyC0xQXkp9FTA665YluxuL",
-    "kind": "image",
-    "name": "Lunaya photo1.webp",
-    "media_group": "Exterior",
-    "url": "/__l5e/assets-v1/57f13c05-cb4d-433b-83af-d4ebb5de2291/Lunaya-photo1.webp",
-    "mime": "image/webp",
-    "position": 3,
-    "width": 1920,
-    "height": 1313
-   }
-  ]
  },
  {
   "slug": "masaar-3-by-arada",
